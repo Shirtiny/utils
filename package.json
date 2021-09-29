@@ -1,0 +1,77 @@
+{
+  "name": "ts-lib-template",
+  "version": "1.4.5",
+  "description": "ts-lib-template desc",
+  "types": "./dist/types/main.d.ts",
+  "main": "./dist/main.es.js",
+  "browser": "./dist/main.es.js",
+  "module": "./dist/main.es.js",
+  "exports": {
+    "./dist/main.es.css": "./dist/main.es.css",
+    ".": {
+      "import": "./dist/main.es.js",
+      "require": "./dist/main.cli.js"
+    }
+  },
+  "bin": "./dist/main.cli.js",
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "dotenv -c development node config/server.js",
+    "build": "npm run clean && dotenv -c production node config/builder.js",
+    "test": "jest",
+    "lint": "eslint --max-warnings 0 . --ext .ts",
+    "clean": "shx rm -rf dist",
+    "ts-node": "ts-node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shirtiny/ts-lib-template"
+  },
+  "keywords": [
+    "consloe",
+    "log",
+    "ts",
+    "logger",
+    "TypeScript",
+    "shirtiny"
+  ],
+  "author": {
+    "name": "shirtiny",
+    "email": "shirtiny@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Shirtiny/ts-lib-template/issues"
+  },
+  "jest": {
+    "preset": "ts-jest"
+  },
+  "homepage": "https://github.com/Shirtiny/ts-lib-template#readme",
+  "devDependencies": {
+    "@cowcoders/eslint-config": "^1.2.9",
+    "@types/jest": "26.0.23",
+    "@types/node": "15.6.1",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "autoprefixer": "^10.3.0",
+    "dotenv-cli": "^4.0.0",
+    "esbuild": "0.12.5",
+    "esbuild-sass-plugin": "^1.4.8",
+    "eslint": "^7.28.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "jest": "27.0.3",
+    "nanocolors": "^0.2.10",
+    "open": "^8.2.0",
+    "postcss": "^8.3.5",
+    "postcss-preset-env": "^6.7.0",
+    "prettier": "^2.3.0",
+    "shx": "^0.3.3",
+    "ts-jest": "27.0.1",
+    "ts-node": "10.0.0",
+    "typescript": "^4.3.3"
+  }
+}

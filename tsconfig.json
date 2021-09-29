@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      // "@/*": ["src/*"]
+    },
+    "jsx": "preserve",
+    "jsxFactory": "React.createElement",
+    "jsxFragmentFactory": "React.Fragment",
+    "target": "ES2015",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": false,
+    "strict": true,
+    "allowJs": false,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "outDir": "./tsc/",
+    "types": [
+      "node",
+      "jest"
+    ],
+    "lib": [
+      "ES6",
+      "DOM"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+  ],
+  "exclude": [
+    "node_modules",
+    "node",
+    "**/*.test.ts"
+  ]
+}
