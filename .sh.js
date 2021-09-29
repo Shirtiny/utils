@@ -5,7 +5,7 @@
  * @Description:
  */
 module.exports = {
-  globalName: "tsLibTemplate",
+  globalName: "ShUtils",
   outputFileName: "main",
   devServer: {
     host: "localhost",

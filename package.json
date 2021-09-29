@@ -1,7 +1,7 @@
 {
-  "name": "ts-lib-template",
+  "name": "@shirtiny/utils",
   "version": "1.4.5",
-  "description": "ts-lib-template desc",
+  "description": "utils desc",
   "types": "./dist/types/main.d.ts",
   "main": "./dist/main.es.js",
   "browser": "./dist/main.es.js",
@@ -28,13 +28,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Shirtiny/ts-lib-template"
+    "url": "git+https://github.com/Shirtiny/utils"
   },
   "keywords": [
-    "consloe",
-    "log",
     "ts",
-    "logger",
+    "utils",
     "TypeScript",
     "shirtiny"
   ],
@@ -44,12 +42,12 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Shirtiny/ts-lib-template/issues"
+    "url": "https://github.com/Shirtiny/utils/issues"
   },
   "jest": {
     "preset": "ts-jest"
   },
-  "homepage": "https://github.com/Shirtiny/ts-lib-template#readme",
+  "homepage": "https://github.com/Shirtiny/utils#readme",
   "devDependencies": {
     "@cowcoders/eslint-config": "^1.2.9",
     "@types/jest": "26.0.23",
@@ -73,5 +71,8 @@
     "ts-jest": "27.0.1",
     "ts-node": "10.0.0",
     "typescript": "^4.3.3"
+  },
+  "dependencies": {
+    "rxjs": "^7.3.0"
   }
 }
