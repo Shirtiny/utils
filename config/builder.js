@@ -1,21 +1,20 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-26 17:41:22
- * @LastEditTime: 2021-08-24 09:51:38
+ * @LastEditTime: 2021-09-29 20:48:28
  * @Description:
  */
 const esbuild = require("esbuild");
 const childProcess = require("child_process");
 const path = require("path");
-const { sassPlugin } = require("esbuild-sass-plugin");
-const postcss = require("postcss");
-const autoprefixer = require("autoprefixer");
-const postcssPresetEnv = require("postcss-preset-env");
 const { config, isDev } = require("./var");
 const logger = require("./logger");
+const { readdirSync } = require("fs");
 
 const srcDirPath = "../src";
 const distDirPath = "../dist";
+const libDirRelativePath = "/lib";
+
 const typesDirPath = path.resolve(__dirname, `${distDirPath}/types`);
 const fileName = config.outputFileName || "main";
 
@@ -25,66 +24,49 @@ const createFilePath = (dirPath, fileName) => {
   return path.resolve(__dirname, `${dirPath}/${fileName}`);
 };
 
+const getLibNames = () => {
+  return readdirSync(
+    path.resolve(__dirname, srcDirPath + libDirRelativePath),
+  ).filter((f) => /\.(js|ts)$/.test(f));
+  // .map((f) => f.slice(0, f.lastIndexOf("."))); /* ? */
+};
+
 const buildList = [
-  {
-    entryPoints: [createFilePath(srcDirPath, "browser.ts")],
-    platform: "browser",
-    outfile: createFilePath(distDirPath, fileName + ".browser.js"),
-    plugins: [
-      sassPlugin({
-        async transform(source) {
-          const { css } = await postcss([
-            autoprefixer,
-            postcssPresetEnv({ stage: 0 }),
-          ]).process(source, { from: undefined });
-          return css;
-        },
-      }),
-    ],
-    loader: {
-      ".svg": "dataurl",
-    },
-  },
   {
     entryPoints: [createFilePath(srcDirPath, "es.ts")],
     platform: "neutral",
     outfile: createFilePath(distDirPath, fileName + ".es.js"),
-    plugins: [
-      sassPlugin({
-        async transform(source) {
-          const { css } = await postcss([
-            autoprefixer,
-            postcssPresetEnv({ stage: 0 }),
-          ]).process(source, { from: undefined });
-          return css;
-        },
-      }),
-    ],
-    loader: {
-      ".svg": "dataurl",
-    },
+    bundle: true,
   },
   {
-    entryPoints: [createFilePath(srcDirPath, "cli.ts")],
-    platform: "node",
-    outfile: createFilePath(distDirPath, fileName + ".cli.js"),
-    plugins: [],
+    entryPoints/* ? */: getLibNames().map((f) => createFilePath(srcDirPath+ libDirRelativePath, f)),
+    platform: "neutral",
+    outdir/* ? */: path.resolve(__dirname, distDirPath + libDirRelativePath),
+    bundle: false,
   },
 ];
 
-const build = async ({ entryPoints = [], platform, outfile, plugins = [] }) => {
+const build = async ({
+  entryPoints = [],
+  platform,
+  outfile,
+  outdir,
+  plugins = [],
+  bundle = true,
+}) => {
   try {
     await esbuild.build({
       entryPoints,
       platform,
       globalName: config.globalName,
-      bundle: true,
+      bundle,
       minify: !isDev,
       sourcemap: isDev ? "both" : false,
       define: {
         "process.env": JSON.stringify(process.env),
       },
       outfile,
+      outdir,
       plugins,
       jsxFactory: config.jsxFactory,
       jsxFragment: config.jsxFragment,

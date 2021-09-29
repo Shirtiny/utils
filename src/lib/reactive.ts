@@ -1,11 +1,10 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:22:29
- * @LastEditTime: 2021-09-29 18:23:43
+ * @LastEditTime: 2021-09-29 20:36:30
  * @Description:
  */
 import { switchMap, timer, from, takeWhile } from "rxjs";
-import logger from "utils/logger";
 
 const TaskMap = new Map([
   [
@@ -18,8 +17,8 @@ const createTimerTask = ({
   name = "",
   sec = 5,
   delay = 0,
-  request = async (index) => {},
-  stopWhile = (res) => {},
+  request = async (_index: any) => {},
+  stopWhile = (_res: any): any => {},
 }) => {
   const oldTask = TaskMap.get(name);
   if (oldTask) {
@@ -35,13 +34,9 @@ const createTimerTask = ({
     name,
     start() {
       const subscription = source.subscribe({
-        next: (data) => {
-          logger.interval(name, data);
-        },
+        next: () => {},
         error: (e) => console.error(e, "定时任务出错"),
-        complete: () => {
-          logger.interval(`${name} 完成`);
-        },
+        complete: () => {},
       });
 
       this.stop = () => {
