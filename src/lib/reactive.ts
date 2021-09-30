@@ -1,10 +1,11 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:22:29
- * @LastEditTime: 2021-09-30 09:59:13
+ * @LastEditTime: 2021-09-30 14:20:12
  * @Description:
  */
 import { switchMap, timer, from, takeWhile } from "rxjs";
+import dev from "./dev";
 
 export interface ITask {
   name: string;
@@ -18,6 +19,8 @@ const TaskMap = new Map<string, ITask>([
     { name: "ExampleTaskName", start: () => {}, stop: () => {} },
   ],
 ]);
+
+dev.set("taskMap", TaskMap);
 
 interface ITaskOption {
   name: string;
