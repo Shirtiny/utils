@@ -1,25 +1,41 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:22:29
- * @LastEditTime: 2021-09-29 20:36:30
+ * @LastEditTime: 2021-09-30 09:59:13
  * @Description:
  */
 import { switchMap, timer, from, takeWhile } from "rxjs";
 
-const TaskMap = new Map([
+export interface ITask {
+  name: string;
+  start(): void;
+  stop(): void;
+}
+
+const TaskMap = new Map<string, ITask>([
   [
     "ExampleTaskName",
     { name: "ExampleTaskName", start: () => {}, stop: () => {} },
   ],
 ]);
 
-const createTimerTask = ({
-  name = "",
-  sec = 5,
-  delay = 0,
-  request = async (_index: any) => {},
-  stopWhile = (_res: any): any => {},
-}) => {
+interface ITaskOption {
+  name: string;
+  sec: number;
+  delay?: number;
+  request(index: number): Promise<any>;
+  stopWhile(requestResult: any): boolean | undefined;
+}
+
+const createTimerTask = (option: ITaskOption): ITask => {
+  const {
+    name = "",
+    sec = 5,
+    delay = 0,
+    request = async (_index: any) => {},
+    stopWhile = (_res: any): any => {},
+  } = option;
+
   const oldTask = TaskMap.get(name);
   if (oldTask) {
     oldTask.stop();

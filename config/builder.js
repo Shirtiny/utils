@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-26 17:41:22
- * @LastEditTime: 2021-09-30 09:19:00
+ * @LastEditTime: 2021-09-30 09:38:37
  * @Description:
  */
 const esbuild = require("esbuild");
@@ -33,7 +33,7 @@ const getLibNames = () => {
 
 const buildList = [
   {
-    entryPoints: [createFilePath(srcDirPath, "es.ts")],
+    entryPoints: [createFilePath(srcDirPath, "main.ts")],
     platform: "neutral",
     outfile: createFilePath(distDirPath, fileName + ".es.js"),
     bundle: false,
@@ -72,7 +72,7 @@ const build = async ({
       jsxFragment: config.jsxFragment,
     });
     childProcess.execSync(tscCommand);
-    logger.chan("Building", [entryPoints.join("; ")], outfile);
+    logger.chan("Building", [entryPoints.join("; ")], outfile || outdir);
   } catch (e) {
     return console.error(e.message);
   }
