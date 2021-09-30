@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-26 17:41:22
- * @LastEditTime: 2021-09-29 20:48:28
+ * @LastEditTime: 2021-09-30 09:19:00
  * @Description:
  */
 const esbuild = require("esbuild");
@@ -36,7 +36,7 @@ const buildList = [
     entryPoints: [createFilePath(srcDirPath, "es.ts")],
     platform: "neutral",
     outfile: createFilePath(distDirPath, fileName + ".es.js"),
-    bundle: true,
+    bundle: false,
   },
   {
     entryPoints/* ? */: getLibNames().map((f) => createFilePath(srcDirPath+ libDirRelativePath, f)),
