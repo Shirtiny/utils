@@ -1,6 +1,6 @@
 {
   "name": "@shirtiny/utils",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "utils desc",
   "types": "./dist/types/main.d.ts",
   "main": "./dist/main.es.js",
@@ -10,6 +10,14 @@
     "dist",
     "LICENSE"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/main.es.js"
+    },
+    "./lib": {
+      "import": "./dist/lib/index.js"
+    }
+  },
   "scripts": {
     "start": "dotenv -c development node config/server.js",
     "build": "npm run clean && dotenv -c production node config/builder.js",
