@@ -1,6 +1,6 @@
 {
   "name": "@shirtiny/utils",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "utils desc",
   "types": "./dist/types/main.d.ts",
   "main": "./dist/main.es.js",
@@ -74,6 +74,7 @@
     "typescript": "^4.3.3"
   },
   "dependencies": {
+    "date-fns": "^2.25.0",
     "rxjs": "^7.3.0"
   }
 }
