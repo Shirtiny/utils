@@ -1,10 +1,10 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 12:07:58
- * @LastEditTime: 2021-09-30 14:08:57
+ * @LastEditTime: 2021-10-12 15:49:03
  * @Description:
  */
-// node --expose-gc  .\node.expose-gc.js
+// node --expose-gc  .\node.testWeakMap.js
 
 global.gc();
 process.memoryUsage(); // heapUsed: 4638992 ≈ 4.4M

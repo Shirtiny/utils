@@ -36,6 +36,7 @@
     ],
     "lib": [
       "ES6",
+      "ESNext.WeakRef",
       "DOM"
     ]
   },

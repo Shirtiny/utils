@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 11:38:42
- * @LastEditTime: 2021-09-30 14:36:13
+ * @LastEditTime: 2021-10-12 17:18:34
  * @Description:
  */
 
@@ -11,22 +11,36 @@ interface IDev {
   get(k: string, pwd: string): any;
 }
 
-const map = new Map();
+const isSupportWeakRef = !!WeakRef;
+
+interface IData {
+  name: string;
+  value: any;
+}
+
+const map = new Map<string, WeakRef<IData> | IData>();
 
 class Dev implements IDev {
   check(pwd: string): boolean {
-    return pwd === "123456";
+    return pwd === process.env.PASSWORD;
   }
 
   set(k: string, v: any): void {
-    map.set(k, v);
+    const data: IData = {
+      name: k,
+      value: v,
+    };
+    map.set(k, isSupportWeakRef ? new WeakRef(data) : data);
   }
 
   get(k: string, pwd: string) {
     if (!this.check(pwd)) {
       return;
     }
-    return map.get(k);
+    const data = map.get(k);
+    return isSupportWeakRef
+      ? (data as WeakRef<IData>).deref()?.value
+      : (data as IData).value;
   }
 }
 
