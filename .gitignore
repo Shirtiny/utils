@@ -6,6 +6,7 @@ dist
 .vscode
 .idea
 pkg
+tsc
 
 # Log files
 npm-debug.log*
