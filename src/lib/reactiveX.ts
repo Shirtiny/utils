@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:22:29
- * @LastEditTime: 2021-09-30 14:20:12
+ * @LastEditTime: 2021-10-15 10:45:40
  * @Description:
  */
 import { switchMap, timer, from, takeWhile } from "rxjs";
@@ -68,8 +68,8 @@ const createTimerTask = (option: ITaskOption): ITask => {
   return newTask;
 };
 
-const reactive = {
+const reactiveX = {
   createTimerTask,
 };
 
-export default reactive;
+export default reactiveX;
