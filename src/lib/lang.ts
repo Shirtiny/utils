@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-10-09 12:05:27
- * @LastEditTime: 2021-10-20 15:42:03
+ * @LastEditTime: 2021-11-02 15:27:40
  * @Description:
  */
 
@@ -37,17 +37,33 @@ const isNullOrUndefined = (arg?: any): arg is null | undefined => {
 };
 
 /**
+ * @description:判断是否为数字
+ * @param {any} arg
+ * @return {Boolean} -eg: arg is number
+ */
+const isNumber = (arg?: any): arg is number => typeof arg === "number";
+
+/**
+ * @description:判断是否为字符串
+ * @param {any} arg
+ * @return {Boolean} -eg: arg is string
+ */
+const isString = (arg?: any): arg is string => typeof arg === "string";
+
+/**
  * @description:判断是否为text节点的值
  * @param {any} arg
  * @return {Boolean} -eg: arg is number | string
  */
 const isText = (arg?: any): arg is number | string =>
-  typeof arg === "number" || typeof arg === "string";
+  isNumber(arg) || isString(arg);
 
 const lang = {
   isFn,
   isObject,
   isUndefined,
+  isNumber,
+  isString,
   isNullOrUndefined,
   isText,
 };

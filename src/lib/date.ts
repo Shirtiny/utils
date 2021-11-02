@@ -1,11 +1,25 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-10-09 12:09:34
+ * @LastEditTime: 2021-11-02 16:09:27
  * @Description:
  */
 
-import { format, getUnixTime } from "date-fns";
+import {
+  format,
+  getUnixTime,
+  add,
+  eachDayOfInterval,
+  eachHourOfInterval,
+  eachMinuteOfInterval,
+  eachMonthOfInterval,
+  eachWeekOfInterval,
+  eachYearOfInterval,
+  isDate,
+  min,
+  max,
+  Duration,
+} from "date-fns";
 import lang from "./lang";
 
 /**
@@ -27,10 +41,41 @@ const fromUnixTime = (unixTime: number) => {
 };
 
 const formatUnixTime = (
-  unixTime: number,
+  time: number | Date,
   pattern = "yyyy-MM-dd HH:mm:ss xx",
 ) => {
-  return format(fromUnixTime(unixTime), pattern);
+  if (isDate(time)) {
+    return format(time, pattern);
+  }
+  if (lang.isNumber(time)) {
+    return format(fromUnixTime(time), pattern);
+  }
+  return time + "";
+};
+
+const intervalTypes = {
+  days: eachDayOfInterval,
+  hours: eachHourOfInterval,
+  minutes: eachMinuteOfInterval,
+  months: eachMonthOfInterval,
+  weeks: eachWeekOfInterval,
+  years: eachYearOfInterval,
+};
+
+// 获取一个date数组 传入起始date 和 时长（时长内的值可为负值）
+const getIntervalDates = (
+  startDate: Date,
+  duration: Duration,
+  type: keyof typeof intervalTypes,
+) => {
+  const dates = [startDate, add(startDate, duration)];
+
+  return intervalTypes[type]
+    ? intervalTypes[type]({
+        start: min(dates),
+        end: max(dates),
+      })
+    : [];
 };
 
 const date = {
@@ -38,6 +83,7 @@ const date = {
   isExpired,
   fromUnixTime,
   formatUnixTime,
+  getIntervalDates,
 };
 
 export default date;

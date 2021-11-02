@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:17:03
- * @LastEditTime: 2021-11-02 14:46:41
+ * @LastEditTime: 2021-11-02 16:13:00
  * @Description:
  */
 import { date, dev, math } from "./main";
@@ -20,6 +20,10 @@ dev.get("a", "123456"); /* ? */
 ); /* ? */
 
 math.restrict(11, 0, 10); /* ? */
+
+date
+  .getIntervalDates(new Date(), { months: 1, days: -1 }, "days")
+  .map((d) => date.formatUnixTime(d)); /* ? */
 
 const div = document.createElement("div");
 div.classList.add("mouse-hover-container");
