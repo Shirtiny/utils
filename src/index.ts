@@ -1,14 +1,14 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:17:03
- * @LastEditTime: 2021-11-02 16:13:00
+ * @LastEditTime: 2021-11-02 16:22:47
  * @Description:
  */
 import { date, dev, math } from "./main";
 import "./index.scss";
 import { reactiveX } from "./lib";
 
-date.formatUnixTime(date.unix()); /* ? */
+date.formatTime(date.unix()); /* ? */
 
 dev.set("k", "asd");
 dev.set("a", { a: "a" });
@@ -23,7 +23,7 @@ math.restrict(11, 0, 10); /* ? */
 
 date
   .getIntervalDates(new Date(), { months: 1, days: -1 }, "days")
-  .map((d) => date.formatUnixTime(d)); /* ? */
+  .map((d) => date.formatTime(d)); /* ? */
 
 const div = document.createElement("div");
 div.classList.add("mouse-hover-container");

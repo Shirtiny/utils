@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-11-02 16:09:27
+ * @LastEditTime: 2021-11-02 16:22:36
  * @Description:
  */
 
@@ -40,7 +40,7 @@ const fromUnixTime = (unixTime: number) => {
   return new Date(unixTime * 1000);
 };
 
-const formatUnixTime = (
+const formatTime = (
   time: number | Date,
   pattern = "yyyy-MM-dd HH:mm:ss xx",
 ) => {
@@ -82,7 +82,7 @@ const date = {
   unix,
   isExpired,
   fromUnixTime,
-  formatUnixTime,
+  formatTime,
   getIntervalDates,
 };
 

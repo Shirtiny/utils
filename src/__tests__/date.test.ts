@@ -12,11 +12,11 @@ describe("date", () => {
   it("isExpired", () => {
     expect(date.isExpired(unixTime)).toBe(true);
   });
-  it("formatUnixTime", () => {
-    expect(date.formatUnixTime(unixTime)).toMatch(
+  it("formatTime", () => {
+    expect(date.formatTime(unixTime)).toMatch(
       /^2021-\d{2}-\d{2} \d+:06:23 \+\d{4}$/,
     );
-    expect(date.formatUnixTime(unixTime, "yyyy-MM-dd HH:mm:ss")).toMatch(
+    expect(date.formatTime(unixTime, "yyyy-MM-dd HH:mm:ss")).toMatch(
       /^\d{1,4}(-)(1[0-2]|0[1-9])\1(0[1-9]|[1-2]\d|30|31) (?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
     );
   });
