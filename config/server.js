@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-25 17:35:25
- * @LastEditTime: 2021-09-30 09:47:26
+ * @LastEditTime: 2021-10-21 15:00:51
  * @Description:
  */
 "use strict";
@@ -10,7 +10,10 @@ const esbuild = require("esbuild");
 const http = require("http");
 const path = require("path");
 const open = require("open");
-
+const { sassPlugin } = require("esbuild-sass-plugin");
+const postcss = require("postcss");
+const autoprefixer = require("autoprefixer");
+const postcssPresetEnv = require("postcss-preset-env");
 const util = require("./util");
 const { config } = require("./var");
 const logger = require("./logger");
@@ -63,6 +66,20 @@ const serve = async () => {
       sourcemap: "both",
       define: {
         "process.env": JSON.stringify(process.env),
+      },
+      plugins: [
+        sassPlugin({
+          async transform(source) {
+            const { css } = await postcss([
+              autoprefixer,
+              postcssPresetEnv({ stage: 0 }),
+            ]).process(source, { from: undefined });
+            return css;
+          },
+        }),
+      ],
+      loader: {
+        ".svg": "dataurl",
       },
     },
   );

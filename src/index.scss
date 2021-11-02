@@ -1,0 +1,15 @@
+.mouse-hover-container {
+  width: 200px;
+  height: 200px;
+  background-color: #000;
+  .mouse-hover-title {
+    opacity: 0;
+    color: #fff;
+    transition: 0.4s;
+  }
+  &.display-title {
+    .mouse-hover-title {
+      opacity: 1;
+    }
+  }
+}

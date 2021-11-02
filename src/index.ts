@@ -1,10 +1,12 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:17:03
- * @LastEditTime: 2021-10-20 15:40:06
+ * @LastEditTime: 2021-11-02 14:46:41
  * @Description:
  */
-import { date, dev, math, lang } from "./main";
+import { date, dev, math } from "./main";
+import "./index.scss";
+import { reactiveX } from "./lib";
 
 date.formatUnixTime(date.unix()); /* ? */
 
@@ -19,5 +21,22 @@ dev.get("a", "123456"); /* ? */
 
 math.restrict(11, 0, 10); /* ? */
 
-const a = lang.isNullOrUndefined(1);
-a;
+const div = document.createElement("div");
+div.classList.add("mouse-hover-container");
+const span = document.createElement("span");
+span.textContent = "标题";
+span.classList.add("mouse-hover-title");
+div.appendChild(span);
+
+document.body.appendChild(div);
+
+reactiveX.mouseHovering({
+  target: div,
+  wait: 1000,
+  onDisplay: (el) => {
+    el.classList.add("display-title");
+  },
+  onHidden: (el) => {
+    el.classList.remove("display-title");
+  },
+});
