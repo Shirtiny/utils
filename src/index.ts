@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:17:03
- * @LastEditTime: 2021-11-02 16:22:47
+ * @LastEditTime: 2021-11-03 09:28:46
  * @Description:
  */
 import { date, dev, math } from "./main";
@@ -20,6 +20,8 @@ dev.get("a", "123456"); /* ? */
 ); /* ? */
 
 math.restrict(11, 0, 10); /* ? */
+
+date.isSame(new Date(), new Date().getTime() + 1000 * 1, "second"); /* ? */
 
 date
   .getIntervalDates(new Date(), { months: 1, days: -1 }, "days")
