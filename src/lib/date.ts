@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-11-03 09:24:30
+ * @LastEditTime: 2021-11-03 18:14:13
  * @Description:
  */
 
@@ -103,11 +103,30 @@ const sameTypes = {
   year: isSameYear,
 };
 
-const isSame = (time1: Time, time2: Time, type: keyof typeof sameTypes) => {
+/**
+ * @description: 确定两个时间是否在同一 秒/分/时/天/周/月/年
+ * @param {Time} time1
+ * @param {Time} time2
+ * @param {String} type 判断类型，天、年等
+ * @param {Boolean} isSeconds 输入的time为数字时 是否是秒数
+ * @return {*}
+ */
+const isSame = (
+  time1: Time,
+  time2: Time,
+  type: keyof typeof sameTypes,
+  isSeconds = false,
+) => {
+  let t1 = time1;
+  let t2 = time2;
+  if (isSeconds) {
+    lang.isNumber(t1) && (t1 *= 1000);
+    lang.isNumber(t2) && (t2 *= 1000);
+  }
   if (!sameTypes[type]) {
     throw new Error(`@shirtiny-utils date.isSame unsupported type: ${type}`);
   }
-  return sameTypes[type](time1, time2);
+  return sameTypes[type](t1, t2);
 };
 
 const date = {
