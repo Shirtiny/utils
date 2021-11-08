@@ -1,13 +1,14 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-11-08 15:09:28
+ * @LastEditTime: 2021-11-08 18:05:55
  * @Description:
  */
 
 import {
   format,
   getUnixTime,
+  formatDistance,
   startOfSecond,
   startOfMinute,
   startOfHour,
@@ -45,13 +46,13 @@ import {
 import lang from "./lang";
 
 // type TimeTypes =
-//   | "Second"
-//   | "Minute"
-//   | "Hour"
-//   | "Day"
-//   | "Week"
-//   | "Month"
-//   | "Year";
+//   | "second"
+//   | "minute"
+//   | "hour"
+//   | "day"
+//   | "week"
+//   | "month"
+//   | "year";
 
 type Time = Date | number;
 
@@ -142,6 +143,62 @@ const isSame = (
     throw new Error(`@shirtiny-utils date.isSame unsupported type: ${type}`);
   }
   return sameTypes[type](t1, t2);
+};
+
+// https://github.dev/date-fns/date-fns/blob/f8fb243c55853f90d04efd8933fc291a24402b27/src/formatDistance/index.ts#L199
+type DynamicPatternTypes =
+  | "lessThanXSeconds"
+  | "halfAMinute"
+  | "lessThanXMinutes"
+  | "xMinutes"
+  | "aboutXHours"
+  | "xDays"
+  | "aboutXMonths"
+  | "xMonths"
+  | "aboutXYears"
+  | "overXYears"
+  | "almostXYears";
+
+type DynamicPatternsFactory = Record<
+  DynamicPatternTypes,
+  (_upTo: number) => string
+>;
+
+const defaultDynamicPatternsFactory: DynamicPatternsFactory = {
+  lessThanXSeconds: () => "mm:ss",
+  halfAMinute: () => "mm:ss",
+  lessThanXMinutes: () => "mm:ss",
+  xMinutes: () => "mm:ss",
+  aboutXHours: () => "HH:mm:ss",
+  xDays: () => "MM-dd HH:mm:ss",
+  aboutXMonths: () => "MM-dd HH:mm:ss",
+  xMonths: () => "MM-dd HH:mm:ss",
+  aboutXYears: () => "yyyy-MM-dd HH:mm:ss",
+  overXYears: () => "yyyy-MM-dd HH:mm:ss",
+  almostXYears: () => "yyyy-MM-dd HH:mm:ss",
+};
+
+const formatTimeDynamic = (
+  time1: Time,
+  time2: Time,
+  options: {
+    dynamicPatternsFactory?: Partial<DynamicPatternsFactory>;
+    includeSeconds?: boolean;
+    addSuffix?: boolean;
+  } = {},
+) => {
+  const { dynamicPatternsFactory, includeSeconds, addSuffix } = options;
+  const factory: DynamicPatternsFactory = Object.assign(
+    {},
+    defaultDynamicPatternsFactory,
+    dynamicPatternsFactory,
+  );
+  formatDistance(time1, time2, { includeSeconds, addSuffix ,locale: {
+    formatDistance: (type:string, upTo: number) => {
+
+    }
+  }});
+  console.log(time, dynamicPatternsFactory);
 };
 
 // date-fns
