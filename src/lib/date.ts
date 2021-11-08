@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-11-08 18:05:55
+ * @LastEditTime: 2021-11-08 23:58:08
  * @Description:
  */
 
@@ -37,6 +37,7 @@ import {
   isSameMonth,
   isSameYear,
   isDate,
+  toDate,
   add,
   sub,
   min,
@@ -146,7 +147,7 @@ const isSame = (
 };
 
 // https://github.dev/date-fns/date-fns/blob/f8fb243c55853f90d04efd8933fc291a24402b27/src/formatDistance/index.ts#L199
-type DynamicPatternTypes =
+type DistanceTypes =
   | "lessThanXSeconds"
   | "halfAMinute"
   | "lessThanXMinutes"
@@ -159,52 +160,74 @@ type DynamicPatternTypes =
   | "overXYears"
   | "almostXYears";
 
-type DynamicPatternsFactory = Record<
-  DynamicPatternTypes,
-  (_upTo: number) => string
->;
+type DistanceFormatter = (
+  date1: Date,
+  date2: Date,
+  upTo: number,
+  format: (date: Date) => string,
+) => string;
 
-const defaultDynamicPatternsFactory: DynamicPatternsFactory = {
-  lessThanXSeconds: () => "mm:ss",
-  halfAMinute: () => "mm:ss",
-  lessThanXMinutes: () => "mm:ss",
-  xMinutes: () => "mm:ss",
-  aboutXHours: () => "HH:mm:ss",
-  xDays: () => "MM-dd HH:mm:ss",
-  aboutXMonths: () => "MM-dd HH:mm:ss",
-  xMonths: () => "MM-dd HH:mm:ss",
-  aboutXYears: () => "yyyy-MM-dd HH:mm:ss",
-  overXYears: () => "yyyy-MM-dd HH:mm:ss",
-  almostXYears: () => "yyyy-MM-dd HH:mm:ss",
+type DistanceFormattersFactory = Record<DistanceTypes, DistanceFormatter>;
+
+const defaultDistanceFormattersFactory: DistanceFormattersFactory = {
+  lessThanXSeconds: (d) => formatTime(d, "HH:mm:ss"),
+  halfAMinute: (d) => formatTime(d, "HH:mm:ss"),
+  lessThanXMinutes: (d) => formatTime(d, "HH:mm:ss"),
+  xMinutes: (d) => formatTime(d, "HH:mm:ss"),
+  aboutXHours: (d) => formatTime(d, "HH:mm:ss"),
+  xDays: (d) => formatTime(d, "MM-dd HH:mm:ss"),
+  aboutXMonths: (d) => formatTime(d, "MM-dd HH:mm:ss"),
+  xMonths: (d) => formatTime(d, "MM-dd HH:mm:ss"),
+  aboutXYears: (d) => formatTime(d, "yyyy-MM-dd HH:mm:ss"),
+  overXYears: (d) => formatTime(d, "yyyy-MM-dd HH:mm:ss"),
+  almostXYears: (d) => formatTime(d, "yyyy-MM-dd HH:mm:ss"),
 };
 
-const formatTimeDynamic = (
+const formatTimeByDistance = (
   time1: Time,
   time2: Time,
   options: {
-    dynamicPatternsFactory?: Partial<DynamicPatternsFactory>;
+    distanceFormattersFactory?: Partial<DistanceFormattersFactory>;
     includeSeconds?: boolean;
     addSuffix?: boolean;
   } = {},
 ) => {
-  const { dynamicPatternsFactory, includeSeconds, addSuffix } = options;
-  const factory: DynamicPatternsFactory = Object.assign(
+  const { distanceFormattersFactory, includeSeconds, addSuffix } = options;
+  const patternsFactory: DistanceFormattersFactory = Object.assign(
     {},
-    defaultDynamicPatternsFactory,
-    dynamicPatternsFactory,
+    defaultDistanceFormattersFactory,
+    distanceFormattersFactory,
   );
-  formatDistance(time1, time2, { includeSeconds, addSuffix ,locale: {
-    formatDistance: (type:string, upTo: number) => {
+  return formatDistance(time1, time2, {
+    includeSeconds,
+    addSuffix,
+    locale: {
+      formatDistance: (type: string, upTo: number) => {
+        const formatter: DistanceFormatter = patternsFactory[type];
+        if (!formatter) return "";
+        return formatter(toDate(time1), toDate(time2), upTo, formatTime);
+      },
+    },
+  });
+};
 
-    }
-  }});
-  console.log(time, dynamicPatternsFactory);
+const formatTimeByDistanceToNow = (
+  time: Time,
+  options?: {
+    distanceFormattersFactory?: Partial<DistanceFormattersFactory>;
+    includeSeconds?: boolean;
+    addSuffix?: boolean;
+    defaultFormat?: (date: Date) => string;
+  },
+) => {
+  return formatTimeByDistance(time, Date.now(), options);
 };
 
 // date-fns
 const fns = {
   format,
   getUnixTime,
+  formatDistance,
   startOfSecond,
   startOfMinute,
   startOfHour,
@@ -233,6 +256,7 @@ const fns = {
   isSameMonth,
   isSameYear,
   isDate,
+  toDate,
   add,
   sub,
   min,
@@ -243,6 +267,8 @@ const date = {
   unix,
   fromUnixTime,
   formatTime,
+  formatTimeByDistance,
+  formatTimeByDistanceToNow,
   getIntervalDates,
   isExpired,
   isSame,
