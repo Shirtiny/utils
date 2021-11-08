@@ -1,13 +1,27 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-11-08 14:43:34
+ * @LastEditTime: 2021-11-08 15:09:28
  * @Description:
  */
 
 import {
   format,
   getUnixTime,
+  startOfSecond,
+  startOfMinute,
+  startOfHour,
+  startOfDay,
+  startOfWeek,
+  startOfMonth,
+  startOfYear,
+  endOfSecond,
+  endOfMinute,
+  endOfHour,
+  endOfDay,
+  endOfWeek,
+  endOfMonth,
+  endOfYear,
   eachDayOfInterval,
   eachHourOfInterval,
   eachMinuteOfInterval,
@@ -134,6 +148,20 @@ const isSame = (
 const fns = {
   format,
   getUnixTime,
+  startOfSecond,
+  startOfMinute,
+  startOfHour,
+  startOfDay,
+  startOfWeek,
+  startOfMonth,
+  startOfYear,
+  endOfSecond,
+  endOfMinute,
+  endOfHour,
+  endOfDay,
+  endOfWeek,
+  endOfMonth,
+  endOfYear,
   eachDayOfInterval,
   eachHourOfInterval,
   eachMinuteOfInterval,
