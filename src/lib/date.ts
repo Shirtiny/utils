@@ -1,14 +1,13 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-11-03 18:14:13
+ * @LastEditTime: 2021-11-08 14:43:34
  * @Description:
  */
 
 import {
   format,
   getUnixTime,
-  add,
   eachDayOfInterval,
   eachHourOfInterval,
   eachMinuteOfInterval,
@@ -23,6 +22,8 @@ import {
   isSameMonth,
   isSameYear,
   isDate,
+  add,
+  sub,
   min,
   max,
   Duration,
@@ -129,13 +130,38 @@ const isSame = (
   return sameTypes[type](t1, t2);
 };
 
+// date-fns
+const fns = {
+  format,
+  getUnixTime,
+  eachDayOfInterval,
+  eachHourOfInterval,
+  eachMinuteOfInterval,
+  eachMonthOfInterval,
+  eachWeekOfInterval,
+  eachYearOfInterval,
+  isSameSecond,
+  isSameMinute,
+  isSameHour,
+  isSameDay,
+  isSameWeek,
+  isSameMonth,
+  isSameYear,
+  isDate,
+  add,
+  sub,
+  min,
+  max,
+};
+
 const date = {
   unix,
-  isExpired,
   fromUnixTime,
   formatTime,
   getIntervalDates,
+  isExpired,
   isSame,
+  fns,
 };
 
 export default date;
