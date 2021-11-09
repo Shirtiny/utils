@@ -227,7 +227,7 @@ const formatTimeByDistanceToNow = (
     defaultFormat?: (date: Date) => string;
   },
 ) => {
-  return formatTimeByDistance(time, Date.now(), options);
+  return formatTimeByDistance(time, unix(), options);
 };
 
 // date-fns
