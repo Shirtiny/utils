@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-11-08 23:58:08
+ * @LastEditTime: 2021-11-09 15:40:15
  * @Description:
  */
 
@@ -55,6 +55,7 @@ import lang from "./lang";
 //   | "month"
 //   | "year";
 
+// date 或者 unix秒数
 type Time = Date | number;
 
 /**
@@ -75,14 +76,23 @@ const fromUnixTime = (unixTime: number) => {
   return new Date(unixTime * 1000);
 };
 
-const formatTime = (time: Time, pattern = "yyyy-MM-dd HH:mm:ss xx") => {
+const timeToDate = (time: Time): Date => {
   if (isDate(time)) {
-    return format(time, pattern);
+    return time as Date;
   }
   if (lang.isNumber(time)) {
-    return format(fromUnixTime(time), pattern);
+    return fromUnixTime(time);
   }
-  return time + "";
+  console.warn(
+    `@shirtiny/utils timeToDate doesn't accept ${time} as arguments`,
+  );
+  console.warn(new Error().stack);
+  return new Date(NaN);
+};
+
+const formatTime = (time: Time, pattern = "yyyy-MM-dd HH:mm:ss xx") => {
+  const date = timeToDate(time);
+  return format(date, pattern);
 };
 
 const intervalTypes = {
@@ -96,10 +106,11 @@ const intervalTypes = {
 
 // 获取一个date数组 传入起始date 和 时长（时长内的值可为负值）
 const getIntervalDates = (
-  startDate: Date,
+  start: Time,
   duration: Duration,
   type: keyof typeof intervalTypes,
 ) => {
+  const startDate = timeToDate(start);
   const dates = [startDate, add(startDate, duration)];
 
   return intervalTypes[type]
@@ -125,21 +136,15 @@ const sameTypes = {
  * @param {Time} time1
  * @param {Time} time2
  * @param {String} type 判断类型，天、年等
- * @param {Boolean} isSeconds 输入的time为数字时 是否是秒数
- * @return {*}
+ * @return {Boolean}
  */
 const isSame = (
   time1: Time,
   time2: Time,
   type: keyof typeof sameTypes,
-  isSeconds = false,
-) => {
-  let t1 = time1;
-  let t2 = time2;
-  if (isSeconds) {
-    lang.isNumber(t1) && (t1 *= 1000);
-    lang.isNumber(t2) && (t2 *= 1000);
-  }
+): boolean => {
+  let t1 = timeToDate(time1);
+  let t2 = timeToDate(time2);
   if (!sameTypes[type]) {
     throw new Error(`@shirtiny-utils date.isSame unsupported type: ${type}`);
   }
@@ -198,14 +203,16 @@ const formatTimeByDistance = (
     defaultDistanceFormattersFactory,
     distanceFormattersFactory,
   );
-  return formatDistance(time1, time2, {
+  const date1 = timeToDate(time1);
+  const date2 = timeToDate(time2);
+  return formatDistance(date1, date2, {
     includeSeconds,
     addSuffix,
     locale: {
       formatDistance: (type: string, upTo: number) => {
         const formatter: DistanceFormatter = patternsFactory[type];
         if (!formatter) return "";
-        return formatter(toDate(time1), toDate(time2), upTo, formatTime);
+        return formatter(date1, date2, upTo, formatTime);
       },
     },
   });
