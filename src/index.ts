@@ -1,12 +1,13 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:17:03
- * @LastEditTime: 2021-11-03 09:28:46
+ * @LastEditTime: 2021-11-10 17:24:36
  * @Description:
  */
 import { date, dev, math } from "./main";
 import "./index.scss";
 import { reactiveX } from "./lib";
+import file from "./lib/file";
 
 date.formatTime(date.unix()); /* ? */
 
@@ -46,3 +47,18 @@ reactiveX.mouseHovering({
     el.classList.remove("display-title");
   },
 });
+
+const fileInput = document.createElement("input");
+fileInput.type = "file";
+fileInput.addEventListener("change", (e) => {
+  const files = (e.currentTarget as HTMLInputElement).files || [];
+  file
+    .read((reader) => {
+      reader.readAsText(files[0]);
+    })
+    .then((s) => {
+      console.log("reader:", s);
+    });
+});
+
+document.body.appendChild(fileInput);
