@@ -1,13 +1,22 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:22:29
- * @LastEditTime: 2021-11-03 09:25:14
+ * @LastEditTime: 2021-11-14 23:01:54
  * @Description:
  */
 import { timer, from, fromEvent } from "rxjs";
-import { switchMap, takeWhile, tap, takeUntil } from "rxjs/operators";
+import {
+  switchMap,
+  takeWhile,
+  tap,
+  takeUntil,
+  retryWhen,
+} from "rxjs/operators";
+import logger from "src/utils/logger";
 
 import dev from "./dev";
+
+const LibName = "reactiveX";
 
 export interface ITask {
   name: string;
@@ -25,7 +34,7 @@ const TaskMap = new Map<string, ITask>([
 dev.set("taskMap", TaskMap);
 
 // 时间任务
-interface ITaskOption {
+interface ITimerTaskOption {
   name: string;
   sec: number;
   delay?: number;
@@ -33,7 +42,7 @@ interface ITaskOption {
   stopWhile(requestResult: any): boolean | undefined;
 }
 
-const createTimerTask = (option: ITaskOption): ITask => {
+const createTimerTask = (option: ITimerTaskOption): ITask => {
   const {
     name = "",
     sec = 5,
@@ -46,6 +55,11 @@ const createTimerTask = (option: ITaskOption): ITask => {
   if (oldTask) {
     oldTask.stop();
     TaskMap.delete(name);
+    logger.warn(
+      LibName,
+      "createTimerTask",
+      `repeat task name: ${name} , has been overwrite`,
+    );
   }
   const source = timer(delay * 1000, sec * 1000).pipe(
     switchMap((index) => from(request(index))),
@@ -69,6 +83,34 @@ const createTimerTask = (option: ITaskOption): ITask => {
   };
   TaskMap.set(name, newTask);
   return newTask;
+};
+
+// 重试任务
+interface IRetryTaskOption {
+  name: string;
+  request(index: number): Promise<any>;
+  stopWhile(requestResult: any): boolean | undefined;
+  count: number;
+  delay?: number;
+}
+
+const createRetryTask = (
+option: IRetryTaskOption
+): string => {
+  const {
+    name = "",
+    count = 0,
+    delay = 0,
+    request = async (_index: any) => {},
+    stopWhile = (_res: any): any => {},
+  } = option;
+  const task: ITask ={
+    name,
+    start: () => {
+      
+    }
+  }
+  return "";
 };
 
 // 鼠标悬停
@@ -117,6 +159,7 @@ const mouseHovering = (options: IMouseHoveringOption): void => {
 
 const reactiveX = {
   createTimerTask,
+  createRetryTask,
   mouseHovering,
 };
 

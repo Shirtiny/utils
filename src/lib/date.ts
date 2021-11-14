@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-11-09 15:40:15
+ * @LastEditTime: 2021-11-14 22:39:13
  * @Description:
  */
 
@@ -45,6 +45,9 @@ import {
   Duration,
 } from "date-fns";
 import lang from "./lang";
+import logger from "../utils/logger";
+
+const LibName = "date";
 
 // type TimeTypes =
 //   | "second"
@@ -83,10 +86,7 @@ const timeToDate = (time: Time): Date => {
   if (lang.isNumber(time)) {
     return fromUnixTime(time);
   }
-  console.warn(
-    `@shirtiny/utils timeToDate doesn't accept ${time} as arguments`,
-  );
-  console.warn(new Error().stack);
+  logger.warn(LibName, "timeToDate", `doesn't accept ${time} as arguments`);
   return new Date(NaN);
 };
 
