@@ -1,0 +1,6 @@
+tasks:
+  - init: make init
+    command: yarn run start
+vscode:
+  extensions:
+    - teabyii.ayu

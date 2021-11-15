@@ -11,7 +11,7 @@ process.memoryUsage(); // heapUsed: 4638992 ≈ 4.4M
 
 const map = new WeakMap();
 let v = new Array(5 * 1024 * 1024);
-map.set({}, {v});
+map.set({}, { v });
 
 global.gc();
 console.log(process.memoryUsage().heapUsed); // heapUsed: 46776176 ≈ 44.6M

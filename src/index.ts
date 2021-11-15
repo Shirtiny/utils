@@ -62,3 +62,20 @@ fileInput.addEventListener("change", (e) => {
 });
 
 document.body.appendChild(fileInput);
+
+const task = reactiveX.createRetryTask({
+  name: "haha",
+  request: () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log("自行报错");
+
+        reject(new Error("自定义错误"))
+      }, 300);
+    })
+  },
+  delay: 1,
+  count: 2
+})
+
+task.start()

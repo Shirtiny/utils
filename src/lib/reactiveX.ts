@@ -11,6 +11,7 @@ import {
   tap,
   takeUntil,
   retryWhen,
+  delayWhen
 } from "rxjs/operators";
 import logger from "src/utils/logger";
 
@@ -27,7 +28,7 @@ export interface ITask {
 const TaskMap = new Map<string, ITask>([
   [
     "ExampleTaskName",
-    { name: "ExampleTaskName", start: () => {}, stop: () => {} },
+    { name: "ExampleTaskName", start: () => { }, stop: () => { } },
   ],
 ]);
 
@@ -47,8 +48,8 @@ const createTimerTask = (option: ITimerTaskOption): ITask => {
     name = "",
     sec = 5,
     delay = 0,
-    request = async (_index: any) => {},
-    stopWhile = (_res: any): any => {},
+    request = async (_index: any) => { },
+    stopWhile = (_res: any): any => { },
   } = option;
 
   const oldTask = TaskMap.get(name);
@@ -70,16 +71,16 @@ const createTimerTask = (option: ITimerTaskOption): ITask => {
     name,
     start() {
       const subscription = source.subscribe({
-        next: () => {},
+        next: () => { },
         error: (e) => console.error(e, "定时任务出错"),
-        complete: () => {},
+        complete: () => { },
       });
 
       this.stop = () => {
         subscription.unsubscribe();
       };
     },
-    stop() {},
+    stop() { },
   };
   TaskMap.set(name, newTask);
   return newTask;
@@ -88,29 +89,50 @@ const createTimerTask = (option: ITimerTaskOption): ITask => {
 // 重试任务
 interface IRetryTaskOption {
   name: string;
-  request(index: number): Promise<any>;
-  stopWhile(requestResult: any): boolean | undefined;
-  count: number;
+  request(): Promise<any>;
+  count?: number;
   delay?: number;
 }
 
 const createRetryTask = (
-option: IRetryTaskOption
-): string => {
+  option: IRetryTaskOption
+): ITask => {
   const {
     name = "",
     count = 0,
     delay = 0,
-    request = async (_index: any) => {},
-    stopWhile = (_res: any): any => {},
+    request = async () => { },
   } = option;
-  const task: ITask ={
-    name,
-    start: () => {
-      
-    }
+  const run = async () => {
+    await request()
   }
-  return "";
+  let curCount = 0;
+  const task: ITask = {
+    name,
+    start() {
+      const source = from(run()).pipe(
+        retryWhen(errors => {
+          return errors.pipe(
+            // 输出错误信息
+            tap(e => {
+              console.log(e)
+              curCount++
+              console.log(`第${curCount}次重试`);
+            }),
+            delayWhen(() => timer(delay * 1000)),
+            // takeWhile(() => curCount > count),
+          );
+        }),
+
+      );
+      const subscription = source.subscribe()
+      this.stop = () => {
+        subscription.unsubscribe();
+      };
+    },
+    stop() { }
+  }
+  return task;
 };
 
 // 鼠标悬停

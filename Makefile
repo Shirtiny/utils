@@ -20,7 +20,7 @@ test:
 	@echo "Testing..."
 	@./.scripts/test.sh
 
-build: clean test
+build: init clean test
 	@echo "👩‍🏭 Building..."
 	@./.scripts/build.sh
 
