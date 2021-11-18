@@ -1,10 +1,10 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:17:03
- * @LastEditTime: 2021-11-10 17:24:36
+ * @LastEditTime: 2021-11-18 16:17:05
  * @Description:
  */
-import { date, dev, math } from "./main";
+import { date, dev, math, util } from "./main";
 import "./index.scss";
 import { reactiveX } from "./lib";
 import file from "./lib/file";
@@ -70,12 +70,31 @@ const task = reactiveX.createRetryTask({
       setTimeout(() => {
         console.log("自行报错");
 
-        reject(new Error("自定义错误"))
+        reject(new Error("自定义错误"));
       }, 300);
-    })
+    });
   },
   delay: 1,
-  count: 2
-})
+  count: 2,
+});
 
-task.start()
+task.start();
+
+const a = () => {
+  util.sleepSync(1000);
+  return "aa haha";
+};
+
+const b = util.memo(a);
+
+const run = () => {
+  const vA = a(); /* ?. */
+  const vA2 = a(); /* ?. */
+  const vB = b(); /* ?. */
+  const vB2 = b(); /* ?. */
+  return { vA, vA2, vB, vB2 };
+};
+
+run(); /* ? $ */
+
+console.log("dsd");
