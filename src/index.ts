@@ -1,10 +1,10 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:17:03
- * @LastEditTime: 2021-11-18 16:17:05
+ * @LastEditTime: 2021-11-18 23:46:20
  * @Description:
  */
-import { date, dev, math, util } from "./main";
+import { date, dev, math } from "./main";
 import "./index.scss";
 import { reactiveX } from "./lib";
 import file from "./lib/file";
@@ -66,35 +66,19 @@ document.body.appendChild(fileInput);
 const task = reactiveX.createRetryTask({
   name: "haha",
   request: () => {
+    console.log("开始发送请求");
+
     return new Promise((resolve, reject) => {
+
       setTimeout(() => {
-        console.log("自行报错");
+        console.log("请求出错");
 
         reject(new Error("自定义错误"));
       }, 300);
     });
   },
   delay: 1,
-  count: 2,
+  maxRetryCount: 3,
 });
 
 task.start();
-
-const a = () => {
-  util.sleepSync(1000);
-  return "aa haha";
-};
-
-const b = util.memo(a);
-
-const run = () => {
-  const vA = a(); /* ?. */
-  const vA2 = a(); /* ?. */
-  const vB = b(); /* ?. */
-  const vB2 = b(); /* ?. */
-  return { vA, vA2, vB, vB2 };
-};
-
-run(); /* ? $ */
-
-console.log("dsd");
