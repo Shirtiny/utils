@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 11:38:42
- * @LastEditTime: 2021-11-21 19:26:27
+ * @LastEditTime: 2021-11-21 20:22:21
  * @Description:
  */
 
@@ -11,7 +11,7 @@ interface IDev {
   get(k: string, pwd: string): any;
 }
 
-const isSupportWeakRef = !!WeakRef;
+const isSupportWeakRef = !!global.WeakRef;
 
 interface IData {
   name: string;
