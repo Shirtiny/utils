@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:22:29
- * @LastEditTime: 2021-11-21 18:16:51
+ * @LastEditTime: 2021-11-21 18:29:12
  * @Description:
  */
 import {
@@ -21,9 +21,9 @@ import {
   retryWhen,
   delayWhen,
 } from "rxjs/operators";
-import { Events } from "src/lib/events";
-import logger from "../utils/logger";
+import { Events } from "./events";
 import dev from "./dev";
+import logger from "../utils/logger";
 
 const LibName = "reactiveX";
 
