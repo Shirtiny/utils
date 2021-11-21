@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-11-20 11:44:13
- * @LastEditTime: 2021-11-21 18:19:12
+ * @LastEditTime: 2021-11-21 23:48:56
  * @Description:
  */
 
@@ -51,7 +51,7 @@ export class Notifier<K, P = any> implements INotifier<K, P> {
   ): INotifierSubscription<K, P> {
     const { index, que = [] } = this.findExecutor(name, executor);
     const copy = que.slice();
-    index >= 0 ? copy.splice(index, 1, executor) : copy.push(executor);
+    index >= 0 ? (copy[index] = executor) : copy.push(executor);
     this._map.set(name, copy);
     return {
       unSubscribe: () => {
@@ -70,20 +70,20 @@ export class Notifier<K, P = any> implements INotifier<K, P> {
 }
 
 export class Events<K, P = any> {
-  notifier: INotifier<K, P>;
+  private _notifier: INotifier<K, P>;
   constructor() {
-    this.notifier = new Notifier();
+    this._notifier = new Notifier();
   }
 
   addEventListener(name: K, callBack: (param?: P) => any) {
-    this.notifier.subscribe(name, callBack);
+    this._notifier.subscribe(name, callBack);
   }
 
   removeEventListener(name: K, callBack: (param?: P) => any) {
-    this.notifier.unSubscribe(name, callBack);
+    this._notifier.unSubscribe(name, callBack);
   }
 
   dispatch(name: K, param?: P) {
-    this.notifier.publish(name, param);
+    this._notifier.publish(name, param);
   }
 }
