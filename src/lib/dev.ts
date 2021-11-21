@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 11:38:42
- * @LastEditTime: 2021-11-10 15:03:00
+ * @LastEditTime: 2021-11-21 19:26:27
  * @Description:
  */
 
@@ -18,7 +18,9 @@ interface IData {
   value: any;
 }
 
-const map = new Map<string, WeakRef<IData> | IData>();
+const map = isSupportWeakRef
+  ? new Map<string, WeakRef<IData> | IData>()
+  : new Map<string, IData>();
 
 class Dev implements IDev {
   check(pwd: string): boolean {
