@@ -1,10 +1,18 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:22:29
- * @LastEditTime: 2021-11-18 23:50:02
+ * @LastEditTime: 2021-11-21 18:16:51
  * @Description:
  */
-import { timer, from, fromEvent, defer } from "rxjs";
+import {
+  timer,
+  from,
+  fromEvent,
+  defer,
+  Subscription,
+  Observable,
+  Observer,
+} from "rxjs";
 import {
   switchMap,
   takeWhile,
@@ -13,15 +21,16 @@ import {
   retryWhen,
   delayWhen,
 } from "rxjs/operators";
+import { Events } from "src/lib/events";
 import logger from "../utils/logger";
 import dev from "./dev";
 
 const LibName = "reactiveX";
 
 export interface ITask {
-  name: string;
-  start(): void;
-  stop(): void;
+  readonly name: string;
+  start(params?: any): void;
+  stop(params?: any): void;
 }
 
 const TaskMap = new Map<string, ITask>([
@@ -33,56 +42,69 @@ const TaskMap = new Map<string, ITask>([
 
 dev.set("taskMap", TaskMap);
 
+type EventTypes = "started" | "stopped";
+
+class ObservableTask extends Events<EventTypes> implements ITask {
+  public readonly name: string;
+  private _source: Observable<any>;
+  private _subscription?: Subscription;
+
+  constructor(name: string, source: Observable<any>) {
+    super();
+    this.name = name;
+    this._source = source;
+    const oldTask = TaskMap.get(name);
+    if (oldTask) {
+      oldTask.stop();
+      TaskMap.delete(name);
+      logger.warn(
+        LibName,
+        "Task constructor",
+        `repeat task name: ${name} , has been overwrite`,
+      );
+    }
+    TaskMap.set(name, this);
+  }
+
+  start(observer?: Partial<Observer<any>>): void {
+    this._subscription = this._source.subscribe(observer);
+    this.dispatch("started");
+  }
+
+  stop(): void {
+    this._subscription?.unsubscribe();
+    this.dispatch("stopped");
+  }
+}
+
 // 时间任务
 interface ITimerTaskOption {
   name: string;
   sec: number;
   delay?: number;
   request(index: number): Promise<any>;
-  stopWhile(requestResult: any): boolean | undefined;
+  stopWhile?(requestResult: any): boolean | undefined;
 }
-
-const createTimerTask = (option: ITimerTaskOption): ITask => {
+/**
+ * @description:强调定时 每次到时间就会执行
+ * @param {ITimerTaskOption} option
+ * @return {*}
+ */
+const createTimerTask = (option: ITimerTaskOption): ObservableTask => {
   const {
     name = "",
     sec = 5,
     delay = 0,
     request = async (_index: any) => {},
-    stopWhile = (_res: any): any => {},
+    stopWhile = (_res: any): any => false,
   } = option;
 
-  const oldTask = TaskMap.get(name);
-  if (oldTask) {
-    oldTask.stop();
-    TaskMap.delete(name);
-    logger.warn(
-      LibName,
-      "createTimerTask",
-      `repeat task name: ${name} , has been overwrite`,
-    );
-  }
   const source = timer(delay * 1000, sec * 1000).pipe(
     switchMap((index) => from(request(index))),
     takeWhile((res) => !stopWhile(res)),
   );
 
-  const newTask = {
-    name,
-    start() {
-      const subscription = source.subscribe({
-        next: () => {},
-        error: (e) => console.error(e, "定时任务出错"),
-        complete: () => {},
-      });
-
-      this.stop = () => {
-        subscription.unsubscribe();
-      };
-    },
-    stop() {},
-  };
-  TaskMap.set(name, newTask);
-  return newTask;
+  return new ObservableTask(name, source);
 };
 
 // 重试任务
@@ -91,51 +113,43 @@ interface IRetryTaskOption {
   request(): Promise<any>;
   delay?: number;
   maxRetryCount?: number;
-  
+  stopWhile?(curCount: number, e?: Error): boolean;
 }
 
-// TODO:未完成
+/**
+ * @description: 出错时重试
+ * @param {IRetryTaskOption} option
+ * @return {*}
+ */
 const createRetryTask = (option: IRetryTaskOption): ITask => {
   const {
     name = "",
     delay = 0,
     request = async () => {},
     maxRetryCount = 0,
+    stopWhile = () => false,
   } = option;
+  let curCount = 0;
+
   const run = async () => {
+    curCount++;
     await request();
   };
 
-  let curCount = 0;
-  const task: ITask = {
-    name,
-    start() {
-      const source = defer(run).pipe(
-        retryWhen((errors) => {
-          return errors.pipe(
-            // 输出错误信息
-            tap((e) => {
-              console.log("捕获错误", e);
-            }),
-            // 当 当前次数 小于 最大次数时 一直取值重试
-            takeWhile(() => curCount < maxRetryCount),
-            delayWhen(() => timer(delay * 1000)),
-            tap(() => {
-              curCount++;
-              console.log(
-                `第${curCount}次重试  最大重试次数：${maxRetryCount}  ${delay}秒后重试`,
-              );
-            }),
-          );
-        }),
+  const source = defer(run).pipe(
+    retryWhen((errors) => {
+      return errors.pipe(
+        // 当 当前重试次数 小于 最大次数时 一直取值重试
+        takeWhile((e) => stopWhile(curCount, e) || curCount < maxRetryCount),
+        delayWhen(() => timer(delay * 1000)),
       );
-      const subscription = source.subscribe();
-      this.stop = () => {
-        subscription.unsubscribe();
-      };
-    },
-    stop() {},
-  };
+    }),
+  );
+  const task = new ObservableTask(name, source);
+  task.addEventListener("stopped", () => {
+    curCount = 0;
+  });
+
   return task;
 };
 

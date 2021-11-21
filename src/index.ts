@@ -1,13 +1,11 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:17:03
- * @LastEditTime: 2021-11-18 23:46:20
+ * @LastEditTime: 2021-11-21 18:25:10
  * @Description:
  */
-import { date, dev, math } from "./main";
+import { date, dev, math, reactiveX, util, file } from "./main";
 import "./index.scss";
-import { reactiveX } from "./lib";
-import file from "./lib/file";
 
 date.formatTime(date.unix()); /* ? */
 
@@ -63,22 +61,40 @@ fileInput.addEventListener("change", (e) => {
 
 document.body.appendChild(fileInput);
 
-const task = reactiveX.createRetryTask({
+const timer = reactiveX.createTimerTask({
+  name: "timer",
+  request: async (index) => {
+    console.log(index + "s");
+  },
+  sec: 1,
+});
+
+timer.start();
+
+const retryTask = reactiveX.createRetryTask({
   name: "haha",
   request: () => {
     console.log("开始发送请求");
-
-    return new Promise((resolve, reject) => {
-
+    return new Promise((_resolve, reject) => {
       setTimeout(() => {
         console.log("请求出错");
-
         reject(new Error("自定义错误"));
-      }, 300);
+      }, 500);
     });
   },
   delay: 1,
   maxRetryCount: 3,
+  stopWhile: (curCount, e) => {
+    console.log(`重试次数：${curCount}， 最大重试次数：${3}`, "捕获错误", e);
+    return false;
+  },
 });
 
-task.start();
+retryTask.start();
+
+util.sleep(15000).then(() => {
+  retryTask.stop();
+  util.sleep(15000).then(() => {
+    retryTask.start();
+  });
+});
