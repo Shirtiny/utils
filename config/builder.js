@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-26 17:41:22
- * @LastEditTime: 2021-09-30 09:38:37
+ * @LastEditTime: 2021-11-21 18:47:06
  * @Description:
  */
 const esbuild = require("esbuild");
@@ -14,6 +14,7 @@ const { readdirSync } = require("fs");
 const srcDirPath = "../src";
 const distDirPath = "../dist";
 const libDirRelativePath = "/lib";
+const depDirRelativePath = "/utils";
 
 const typesDirPath = path.resolve(__dirname, `${distDirPath}/types`);
 const fileName = config.outputFileName || "main";
@@ -31,6 +32,12 @@ const getLibNames = () => {
   // .map((f) => f.slice(0, f.lastIndexOf("."))); /* ? */
 };
 
+const getDepNames = () => {
+  return readdirSync(
+    path.resolve(__dirname, srcDirPath + depDirRelativePath),
+  ).filter((f) => /\.(js|ts)$/.test(f));
+}
+
 const buildList = [
   {
     entryPoints: [createFilePath(srcDirPath, "main.ts")],
@@ -42,6 +49,12 @@ const buildList = [
     entryPoints/* ? */: getLibNames().map((f) => createFilePath(srcDirPath+ libDirRelativePath, f)),
     platform: "neutral",
     outdir/* ? */: path.resolve(__dirname, distDirPath + libDirRelativePath),
+    bundle: false,
+  },
+  {
+    entryPoints/* ? */: getDepNames().map((f) => createFilePath(srcDirPath+ depDirRelativePath, f)),
+    platform: "neutral",
+    outdir/* ? */: path.resolve(__dirname, distDirPath + depDirRelativePath),
     bundle: false,
   },
 ];
