@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-11-20 11:44:13
- * @LastEditTime: 2021-11-21 23:48:56
+ * @LastEditTime: 2021-11-22 10:10:14
  * @Description:
  */
 
@@ -22,14 +22,14 @@ interface INotifier<K, P = any> {
   unSubscribe(name: K, executor: INotifierExecutor<P>): void;
 }
 
-type INotifierQueue<P> = INotifierExecutor<P>[];
+type NotifierQueue<P> = INotifierExecutor<P>[];
 
 export class Notifier<K, P = any> implements INotifier<K, P> {
-  private readonly _map = new Map<K, INotifierQueue<P>>();
+  private _map = new Map<K, NotifierQueue<P>>();
 
   private findExecutor(name: K, executor: INotifierExecutor<P>) {
     const que = this._map.get(name);
-    const index = que ? que.findIndex((fn) => executor === fn) : -1;
+    const index = que ? que.findIndex((fn) => Object.is(executor, fn)) : -1;
     return {
       index,
       que,
@@ -38,11 +38,11 @@ export class Notifier<K, P = any> implements INotifier<K, P> {
 
   publish(name: K, param?: P): void {
     const que = this._map.get(name) || [];
-    que.map((exec) =>
-      (async () => {
-        return exec && exec(param);
-      })(),
-    );
+    const total = que.length;
+    for (let index = 0; index < total; index++) {
+      const exec = que[index];
+      exec && exec(param);
+    }
   }
 
   subscribe(
@@ -50,9 +50,8 @@ export class Notifier<K, P = any> implements INotifier<K, P> {
     executor: INotifierExecutor<P>,
   ): INotifierSubscription<K, P> {
     const { index, que = [] } = this.findExecutor(name, executor);
-    const copy = que.slice();
-    index >= 0 ? (copy[index] = executor) : copy.push(executor);
-    this._map.set(name, copy);
+    index >= 0 ? (que[index] = executor) : que.push(executor);
+    this._map.set(name, que);
     return {
       unSubscribe: () => {
         this.unSubscribe(name, executor);
@@ -63,9 +62,8 @@ export class Notifier<K, P = any> implements INotifier<K, P> {
   unSubscribe(name: K, executor: INotifierExecutor<P>): void {
     const { index, que = [] } = this.findExecutor(name, executor);
     if (index < 0) return;
-    const copy = que.slice();
-    copy.splice(index, 1);
-    this._map.set(name, copy);
+    que.splice(index, 1);
+    this._map.set(name, que);
   }
 }
 
@@ -83,7 +81,7 @@ export class Events<K, P = any> {
     this._notifier.unSubscribe(name, callBack);
   }
 
-  dispatch(name: K, param?: P) {
+  protected dispatch(name: K, param?: P) {
     this._notifier.publish(name, param);
   }
 }
