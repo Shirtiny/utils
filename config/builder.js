@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-26 17:41:22
- * @LastEditTime: 2021-11-21 18:47:06
+ * @LastEditTime: 2021-11-27 09:58:52
  * @Description:
  */
 const esbuild = require("esbuild");
@@ -76,7 +76,7 @@ const build = async ({
       minify: !isDev,
       sourcemap: isDev ? "both" : false,
       define: {
-        "process.env": JSON.stringify(process.env),
+        "process.env": JSON.stringify(config.env || process.env),
       },
       outfile,
       outdir,

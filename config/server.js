@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-25 17:35:25
- * @LastEditTime: 2021-10-21 15:00:51
+ * @LastEditTime: 2021-11-27 09:58:18
  * @Description:
  */
 "use strict";
@@ -65,7 +65,7 @@ const serve = async () => {
       bundle: true,
       sourcemap: "both",
       define: {
-        "process.env": JSON.stringify(process.env),
+        "process.env": JSON.stringify(config.env || process.env),
       },
       plugins: [
         sassPlugin({
