@@ -1,11 +1,11 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-11-21 22:51:43
- * @LastEditTime: 2021-11-21 22:52:49
+ * @LastEditTime: 2021-11-27 11:08:19
  * @Description:
  */
 
-import { file } from "src/lib";
+import { file } from "../main";
 
 const read = () => {
   const fileInput = document.createElement("input");
