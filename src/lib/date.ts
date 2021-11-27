@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-11-14 22:39:13
+ * @LastEditTime: 2021-11-27 23:02:45
  * @Description:
  */
 
@@ -42,6 +42,9 @@ import {
   sub,
   min,
   max,
+  millisecondsInHour,
+  millisecondsInMinute,
+  millisecondsInSecond,
   Duration,
 } from "date-fns";
 import lang from "./lang";
@@ -60,6 +63,13 @@ const LibName = "date";
 
 // date 或者 unix秒数
 type Time = Date | number;
+
+// 时分秒对应的毫秒数  顺序不可变
+const MILLISECONDS_IN = {
+  HOURS: millisecondsInHour,
+  MINUTES: millisecondsInMinute,
+  SECONDS: millisecondsInSecond,
+};
 
 /**
  * @description: 获取unix时间戳
@@ -230,6 +240,84 @@ const formatTimeByDistanceToNow = (
   return formatTimeByDistance(time, unix(), options);
 };
 
+// 格式化为时长字符串 如视频时长
+interface IFormatToDurationStringOption {
+  zeroPrefix?: boolean;
+  needMilliseconds?: boolean;
+}
+
+/**
+ * @description 格式化为时长字符串 如视频时长 毫秒只保留到整数
+ * @param {number} milliseconds
+ * @param {keyof typeof MILLISECONDS_IN } upTo 最高位的时间单位 -eg: HOURS
+ * @param {IFormatToDurationStringOption} option -eg: {zeroPrefix : true, needMilliseconds : true}
+ * @returns durationString  -eg: input 321039.5 (ms)  output 00:05:21.039
+ */
+const formatToDurationString = (
+  milliseconds: number = 0,
+  upTo: keyof typeof MILLISECONDS_IN = "HOURS",
+  option?: IFormatToDurationStringOption,
+) => {
+  const { zeroPrefix = true, needMilliseconds = true } = option || {};
+  const keys = Object.keys(MILLISECONDS_IN);
+  const startIndex = upTo ? keys.findIndex((t) => t === upTo) : 0;
+  if (startIndex < 0) {
+    logger.warn(
+      LibName,
+      "formatToDurationString",
+      `the param "upto" ${upTo} invalid`,
+    );
+    return "";
+  }
+  const types = startIndex === 0 ? keys : keys.slice(startIndex);
+  const results = {};
+
+  let remainingMilliseconds: number = milliseconds;
+  const len = types.length;
+  for (let index = 0; index < len; index++) {
+    const type = types[index]; /* ? */
+    const unit = MILLISECONDS_IN[type];
+    const r = Math.floor(remainingMilliseconds / unit);
+    results[type] = !zeroPrefix && index === 0 ? r : String(r).padStart(2, "0");
+    remainingMilliseconds = remainingMilliseconds - r * unit;
+  }
+
+  return `${Object.values(results).join(":")}${
+    needMilliseconds
+      ? `.${String(Math.floor(remainingMilliseconds)).padStart(3, "0")}`
+      : ""
+  }`;
+};
+
+/**
+ * @description: 解析格式化出的时长字符串
+ * @param {string} durationString -eg: 00:05:21.039
+ * @return {number} milliseconds
+ */
+const parseDurationString = (durationString: string = ""): number => {
+  const str = String(durationString); /* ? */
+  const [mainStr, millisecondsStr] = str.split("."); /* ? */
+
+  const mainTimeStrArr = mainStr.split(":"); /* ? */
+  const types = Object.keys(MILLISECONDS_IN); /* ? */
+
+  let totalMilliseconds = 0;
+  while (true) {
+    const type = types.pop(); /* ? */
+    const timeStr = mainTimeStrArr.pop(); /* ? */
+    if (!type || !timeStr) break;
+    const num = parseInt(timeStr); /* ? */
+    if (isNaN(num)) continue;
+    totalMilliseconds += num * MILLISECONDS_IN[type];
+  }
+
+  const milliseconds = parseInt(millisecondsStr); /* ? */
+  if (!isNaN(milliseconds)) {
+    totalMilliseconds += milliseconds;
+  }
+  return totalMilliseconds;
+};
+
 // date-fns
 const fns = {
   format,
@@ -270,16 +358,26 @@ const fns = {
   max,
 };
 
+const fnsConstants = {
+  millisecondsInHour,
+  millisecondsInMinute,
+  millisecondsInSecond,
+};
+
 const date = {
   unix,
   fromUnixTime,
   formatTime,
   formatTimeByDistance,
   formatTimeByDistanceToNow,
+  formatToDurationString,
+  parseDurationString,
   getIntervalDates,
   isExpired,
   isSame,
+  MILLISECONDS_IN,
   fns,
+  fnsConstants,
 };
 
 export default date;

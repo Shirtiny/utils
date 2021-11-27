@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:17:03
- * @LastEditTime: 2021-10-12 17:14:25
+ * @LastEditTime: 2021-11-27 22:55:20
  * @Description:
  */
 import { date } from "../main";
@@ -29,5 +29,17 @@ describe("date", () => {
 
   it("unix", () => {
     expect(date.unix(new Date(unixTime * 1000))).toBe(unixTime);
+  });
+
+  it("format and parse durationString", () => {
+    // 1h 30m 15s 7.5ms
+    const milliseconds =
+      1 * 60 * 60 * 1000 + 1 * 30 * 60 * 1000 + 1 * 15 * 1000 + 1 * 7.5;
+    const durationString = date.formatToDurationString(milliseconds, "HOURS", {
+      needMilliseconds: true,
+      zeroPrefix: false,
+    });
+    expect(durationString).toBe("1:30:15.007");
+    expect(date.parseDurationString(durationString)).toBe(Math.floor(milliseconds));
   });
 });
