@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-11-18 15:49:57
- * @LastEditTime: 2021-11-18 16:13:16
+ * @LastEditTime: 2021-11-28 16:58:03
  * @Description:
  */
 
@@ -28,10 +28,21 @@ const memo = (func: Function, createHash?: Function): Function => {
   return memoize;
 };
 
+const pipe = (...fns: Function[]) => {
+  return (input: any) => fns.reduce((r, fn) => fn(r), input);
+};
+
+const pipePromises = (...fns: Array<(v: any) => any>) => {
+  return (input: any) =>
+    fns.reduce((promise, fn) => promise.then(fn), Promise.resolve(input));
+};
+
 const util = {
   sleep,
   sleepSync,
   memo,
+  pipe,
+  pipePromises
 };
 
 export default util;

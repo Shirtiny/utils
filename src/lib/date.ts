@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-30 17:29:18
- * @LastEditTime: 2021-11-27 23:02:45
+ * @LastEditTime: 2021-11-28 16:40:09
  * @Description:
  */
 
@@ -272,15 +272,12 @@ const formatToDurationString = (
   const types = startIndex === 0 ? keys : keys.slice(startIndex);
   const results = {};
 
-  let remainingMilliseconds: number = milliseconds;
-  const len = types.length;
-  for (let index = 0; index < len; index++) {
-    const type = types[index]; /* ? */
+  const remainingMilliseconds = types.reduce((remaining, type, index) => {
     const unit = MILLISECONDS_IN[type];
-    const r = Math.floor(remainingMilliseconds / unit);
+    const r = Math.floor(remaining / unit);
     results[type] = !zeroPrefix && index === 0 ? r : String(r).padStart(2, "0");
-    remainingMilliseconds = remainingMilliseconds - r * unit;
-  }
+    return remaining - r * unit;
+  }, milliseconds);
 
   return `${Object.values(results).join(":")}${
     needMilliseconds
@@ -295,23 +292,23 @@ const formatToDurationString = (
  * @return {number} milliseconds
  */
 const parseDurationString = (durationString: string = ""): number => {
-  const str = String(durationString); /* ? */
-  const [mainStr, millisecondsStr] = str.split("."); /* ? */
+  const str = String(durationString);
+  const [mainStr, millisecondsStr] = str.split(".");
 
-  const mainTimeStrArr = mainStr.split(":"); /* ? */
-  const types = Object.keys(MILLISECONDS_IN); /* ? */
+  const mainTimeStrArr = mainStr.split(":");
+  const types = Object.keys(MILLISECONDS_IN);
 
   let totalMilliseconds = 0;
   while (true) {
-    const type = types.pop(); /* ? */
-    const timeStr = mainTimeStrArr.pop(); /* ? */
+    const type = types.pop();
+    const timeStr = mainTimeStrArr.pop();
     if (!type || !timeStr) break;
-    const num = parseInt(timeStr); /* ? */
+    const num = parseInt(timeStr);
     if (isNaN(num)) continue;
     totalMilliseconds += num * MILLISECONDS_IN[type];
   }
 
-  const milliseconds = parseInt(millisecondsStr); /* ? */
+  const milliseconds = parseInt(millisecondsStr);
   if (!isNaN(milliseconds)) {
     totalMilliseconds += milliseconds;
   }
