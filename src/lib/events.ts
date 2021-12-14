@@ -74,7 +74,7 @@ export interface IEvent {
 
 export interface IEventMap {}
 
-export abstract class Events<M extends IEventMap> {
+export class Events<M extends IEventMap> {
   protected _notifier: INotifier<any, any>;
   constructor() {
     this._notifier = new Notifier();
