@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-11-20 11:44:13
- * @LastEditTime: 2021-12-14 13:09:08
+ * @LastEditTime: 2021-12-14 15:44:05
  * @Description:
  */
 
@@ -75,44 +75,26 @@ export interface IEvent {
 export interface IEventMap {}
 
 export abstract class Events<M extends IEventMap> {
-  private _notifier: INotifier<any, any>;
+  protected _notifier: INotifier<any, any>;
   constructor() {
     this._notifier = new Notifier();
   }
-
-  protected abstract beforeAddEventListener<K extends keyof M>(
-    name: K,
-    callBack: (event?: M[K]) => any,
-  ): void;
 
   addEventListener<K extends keyof M>(
     name: K,
     callBack: (event?: M[K]) => any,
   ) {
-    this.beforeAddEventListener(name, callBack);
     this._notifier.subscribe(name, callBack);
   }
-
-  protected abstract beforeRemoveEventListener<K extends keyof M>(
-    name: K,
-    callBack: (event?: M[K]) => any,
-  ): void;
 
   removeEventListener<K extends keyof M>(
     name: K,
     callBack: (event?: M[K]) => any,
   ) {
-    this.beforeRemoveEventListener(name, callBack);
     this._notifier.unSubscribe(name, callBack);
   }
 
-  protected abstract beforeDispatch<K extends keyof M>(
-    name: K,
-    event?: M[K],
-  ): void;
-
   protected dispatch<K extends keyof M>(name: K, event?: M[K]) {
-    this.beforeDispatch(name, event);
     this._notifier.publish(name, event);
   }
 }

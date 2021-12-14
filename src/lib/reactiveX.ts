@@ -78,10 +78,6 @@ class ObservableTask extends Events<IEventMap> implements ITask {
     this._subscription?.unsubscribe();
     this.dispatch("stopped");
   }
-
-  protected beforeAddEventListener(): void {}
-  protected beforeRemoveEventListener(): void {}
-  protected beforeDispatch(): void {}
 }
 
 // 时间任务
