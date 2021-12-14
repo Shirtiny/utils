@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-26 17:41:22
- * @LastEditTime: 2021-11-27 09:58:52
+ * @LastEditTime: 2021-12-14 13:50:00
  * @Description:
  */
 const esbuild = require("esbuild");
@@ -36,7 +36,7 @@ const getDepNames = () => {
   return readdirSync(
     path.resolve(__dirname, srcDirPath + depDirRelativePath),
   ).filter((f) => /\.(js|ts)$/.test(f));
-}
+};
 
 const buildList = [
   {
@@ -46,15 +46,19 @@ const buildList = [
     bundle: false,
   },
   {
-    entryPoints/* ? */: getLibNames().map((f) => createFilePath(srcDirPath+ libDirRelativePath, f)),
+    entryPoints /* ? */: getLibNames().map((f) =>
+      createFilePath(srcDirPath + libDirRelativePath, f),
+    ),
     platform: "neutral",
-    outdir/* ? */: path.resolve(__dirname, distDirPath + libDirRelativePath),
+    outdir /* ? */: path.resolve(__dirname, distDirPath + libDirRelativePath),
     bundle: false,
   },
   {
-    entryPoints/* ? */: getDepNames().map((f) => createFilePath(srcDirPath+ depDirRelativePath, f)),
+    entryPoints /* ? */: getDepNames().map((f) =>
+      createFilePath(srcDirPath + depDirRelativePath, f),
+    ),
     platform: "neutral",
-    outdir/* ? */: path.resolve(__dirname, distDirPath + depDirRelativePath),
+    outdir /* ? */: path.resolve(__dirname, distDirPath + depDirRelativePath),
     bundle: false,
   },
 ];
@@ -83,6 +87,7 @@ const build = async ({
       plugins,
       jsxFactory: config.jsxFactory,
       jsxFragment: config.jsxFragment,
+      inject: ["./jsx-shim.ts"],
     });
     childProcess.execSync(tscCommand);
     logger.chan("Building", [entryPoints.join("; ")], outfile || outdir);

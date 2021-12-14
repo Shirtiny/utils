@@ -5,8 +5,8 @@
       // "@/*": ["src/*"]
     },
     "jsx": "preserve",
-    "jsxFactory": "React.createElement",
-    "jsxFragmentFactory": "React.Fragment",
+    "jsxFactory": "jsx.createElement",
+    "jsxFragmentFactory": "jsx.Fragment",
     "target": "ES2015",
     "module": "commonjs",
     "moduleResolution": "node",

@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-10-09 12:05:27
- * @LastEditTime: 2021-11-02 15:27:40
+ * @LastEditTime: 2021-12-14 13:36:18
  * @Description:
  */
 
@@ -18,6 +18,13 @@ const isFn = (arg?: any): arg is Function => typeof arg === "function";
  * @return {Boolean} -eg: arg is Object
  */
 const isObject = (arg?: any): arg is Object => arg instanceof Object;
+
+/**
+ * @description: 判断是否为数组
+ * @param {any} arg
+ * @return {Boolean} -eg: arg is Array
+ */
+const isArray = Array.isArray;
 
 /**
  * @description: 判断是否为未定义
@@ -61,6 +68,7 @@ const isText = (arg?: any): arg is number | string =>
 const lang = {
   isFn,
   isObject,
+  isArray,
   isUndefined,
   isNumber,
   isString,

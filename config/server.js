@@ -81,6 +81,9 @@ const serve = async () => {
       loader: {
         ".svg": "dataurl",
       },
+      jsxFactory: config.jsxFactory,
+      jsxFragment: config.jsxFragment,
+      inject: ["./jsx-shim.ts"],
     },
   );
 

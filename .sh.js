@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-26 20:47:19
- * @LastEditTime: 2021-11-27 10:53:44
+ * @LastEditTime: 2021-12-14 13:50:45
  * @Description:
  */
 
@@ -45,7 +45,7 @@ module.exports = {
       },
     },
   },
-  jsxFactory: "React.createElement",
-  jsxFragment: "React.Fragment",
+  jsxFactory: "jsx.createElement",
+  jsxFragment: "jsx.Fragment",
   env,
 };

@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-11-18 15:49:57
- * @LastEditTime: 2021-11-28 16:58:03
+ * @LastEditTime: 2021-12-14 14:32:15
  * @Description:
  */
 
@@ -42,7 +42,7 @@ const util = {
   sleepSync,
   memo,
   pipe,
-  pipePromises
+  pipePromises,
 };
 
 export default util;
