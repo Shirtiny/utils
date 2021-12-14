@@ -1,4 +1,5 @@
 /*
+ * @jest-environment jsdom
  * @Author: Shirtiny
  * @Date: 2021-10-15 10:54:56
  * @LastEditTime: 2021-10-15 10:57:18

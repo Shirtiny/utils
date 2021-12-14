@@ -1,7 +1,8 @@
 /*
+ * @jest-environment jsdom
  * @Author: Shirtiny
  * @Date: 2021-10-09 14:17:20
- * @LastEditTime: 2021-10-20 15:41:18
+ * @LastEditTime: 2021-12-14 15:31:58
  * @Description:
  */
 import { lang } from "../main";

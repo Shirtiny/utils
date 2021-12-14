@@ -1,7 +1,8 @@
 /*
+ * @jest-environment jsdom
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:17:03
- * @LastEditTime: 2021-11-27 22:55:20
+ * @LastEditTime: 2021-12-14 15:31:50
  * @Description:
  */
 import { date } from "../main";
@@ -40,6 +41,8 @@ describe("date", () => {
       zeroPrefix: false,
     });
     expect(durationString).toBe("1:30:15.007");
-    expect(date.parseDurationString(durationString)).toBe(Math.floor(milliseconds));
+    expect(date.parseDurationString(durationString)).toBe(
+      Math.floor(milliseconds),
+    );
   });
 });

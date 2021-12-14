@@ -1,5 +1,7 @@
 // https://github.com/any86/be-full/blob/master/main.ts
 
+import logger from "../utils/logger";
+
 type RFSMethodName =
   | "webkitRequestFullScreen"
   | "requestFullscreen"
@@ -52,7 +54,7 @@ if (`webkitRequestFullScreen` in DOC_EL) {
   FSE_PROP_NAME = "mozFullScreenElement";
   ON_FSC_PROP_NAME = "onmozfullscreenchange";
 } else if (!(`requestFullscreen` in DOC_EL)) {
-  throw `当前浏览器不支持Fullscreen API !`;
+  logger.warn("fullscreen", "selfExec", `当前浏览器不支持Fullscreen API !`);
 }
 
 /**
