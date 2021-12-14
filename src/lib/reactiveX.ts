@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-09-29 18:22:29
- * @LastEditTime: 2021-11-21 18:29:12
+ * @LastEditTime: 2021-12-14 13:11:11
  * @Description:
  */
 import {
@@ -42,9 +42,12 @@ const TaskMap = new Map<string, ITask>([
 
 dev.set("taskMap", TaskMap);
 
-type EventTypes = "started" | "stopped";
+interface IEventMap {
+  started: undefined;
+  stopped: undefined;
+}
 
-class ObservableTask extends Events<EventTypes> implements ITask {
+class ObservableTask extends Events<IEventMap> implements ITask {
   public readonly name: string;
   private _source: Observable<any>;
   private _subscription?: Subscription;
@@ -75,6 +78,10 @@ class ObservableTask extends Events<EventTypes> implements ITask {
     this._subscription?.unsubscribe();
     this.dispatch("stopped");
   }
+
+  protected beforeAddEventListener(): void {}
+  protected beforeRemoveEventListener(): void {}
+  protected beforeDispatch(): void {}
 }
 
 // 时间任务
