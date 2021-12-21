@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-26 17:41:22
- * @LastEditTime: 2021-12-14 13:50:00
+ * @LastEditTime: 2021-12-21 18:24:22
  * @Description:
  */
 const esbuild = require("esbuild");
@@ -85,9 +85,9 @@ const build = async ({
       outfile,
       outdir,
       plugins,
-      jsxFactory: config.jsxFactory,
-      jsxFragment: config.jsxFragment,
-      inject: ["./jsx-shim.ts"],
+      // jsxFactory: config.jsxFactory,
+      // jsxFragment: config.jsxFragment,
+      // inject: ["./jsx-shim.ts"],
     });
     childProcess.execSync(tscCommand);
     logger.chan("Building", [entryPoints.join("; ")], outfile || outdir);
