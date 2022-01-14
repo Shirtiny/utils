@@ -699,6 +699,23 @@
   resolved "https://registry.nlark.com/@types/stack-utils/download/@types/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha1-IPGClPeX8iCbX2XI47XI6CYdEnw=
 
+"@types/w3c-image-capture@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.npmmirror.com/@types/w3c-image-capture/download/@types/w3c-image-capture-1.0.5.tgz#d953701356c4bceacc23f9465a76d3eab864328e"
+  integrity sha1-2VNwE1bEvOrMI/lGWnbT6rhkMo4=
+  dependencies:
+    "@types/webrtc" "*"
+
+"@types/webrtc@*":
+  version "0.0.31"
+  resolved "https://registry.npmmirror.com/@types/webrtc/download/@types/webrtc-0.0.31.tgz#164b8d6f40ff0238b3e62604e8d23f7377125284"
+  integrity sha1-FkuNb0D/Ajiz5iYE6NI/c3cSUoQ=
+
+"@types/wicg-file-system-access@^2020.9.4":
+  version "2020.9.4"
+  resolved "https://registry.npmmirror.com/@types/wicg-file-system-access/download/@types/wicg-file-system-access-2020.9.4.tgz#83f255d6bd20b0ae131d555693473d15a0574e92"
+  integrity sha1-g/JV1r0gsK4THVVWk0c9FaBXTpI=
+
 "@types/yargs-parser@*":
   version "20.2.1"
   resolved "https://registry.npmmirror.com/@types/yargs-parser/download/@types/yargs-parser-20.2.1.tgz?cache=0&sync_timestamp=1637271808222&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fyargs-parser%2Fdownload%2F%40types%2Fyargs-parser-20.2.1.tgz#3b9ce2489919d9e4fea439b76916abc34b2df129"

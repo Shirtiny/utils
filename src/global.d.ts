@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2021-06-25 11:43:20
- * @LastEditTime: 2021-12-14 14:07:47
+ * @LastEditTime: 2022-01-11 11:37:59
  * @Description:
  */
 declare module "*.json";
@@ -17,6 +17,11 @@ interface HTMLElement {
   onmozfullscreenchange: ((this: Element, ev: Event) => any) | null;
   MSFullscreenChange: ((this: Element, ev: Event) => any) | null;
 }
+
+interface HTMLMediaElement {
+  captureStream(frameRate?: number): MediaStream;
+}
+
 
 interface Document {
   readonly webkitFullscreenElement: Element | null;

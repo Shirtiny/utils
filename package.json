@@ -18,6 +18,10 @@
     },
     "./lib": {
       "import": "./dist/lib/index.js"
+    },
+    "./jsx-runtime": {
+      "import": "./jsx-runtime.js",
+      "require": "./jsx-runtime.js"
     }
   },
   "scripts": {
@@ -54,6 +58,8 @@
     "@cowcoders/eslint-config": "^1.2.9",
     "@types/jest": "26.0.23",
     "@types/node": "15.6.1",
+    "@types/w3c-image-capture": "^1.0.5",
+    "@types/wicg-file-system-access": "^2020.9.4",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "autoprefixer": "^10.3.0",

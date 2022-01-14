@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  * @Author: Shirtiny
  * @Date: 2021-10-15 10:54:56
- * @LastEditTime: 2021-10-15 10:57:18
+ * @LastEditTime: 2022-01-14 16:34:27
  * @Description:
  */
-import { math } from "../main";
+import math from "../lib/math";
 
 describe("math", () => {
   it("restrict", () => {
