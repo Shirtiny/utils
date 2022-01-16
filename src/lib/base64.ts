@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2022-01-14 16:01:01
- * @LastEditTime: 2022-01-14 18:49:00
+ * @LastEditTime: 2022-01-16 14:33:47
  * @Description:
  */
 
@@ -10,10 +10,17 @@ import logger from "../utils/logger";
 /**
  *  字节数组转字符串
  * @param {Iterable<number>} buffer
+ * @param {boolean} noEncode 不使用utf8解码
  * @returns {string}
  */
-const ab2str = (buffer: Iterable<number>): string => {
-  return String.fromCharCode(...new Uint8Array(buffer));
+const ab2str = (
+  buffer: Iterable<number>,
+  noEncode: boolean = false,
+): string => {
+  const arr = new Uint8Array(buffer);
+  return noEncode
+    ? String.fromCharCode(...arr)
+    : new TextDecoder().decode(arr.buffer);
 };
 
 /**
@@ -27,6 +34,7 @@ const str2ab = (str: string): Uint8Array => {
   // for (let i = 0, len = str.length; i < len; i++) {
   //   bufferView[i] = str.charCodeAt(i);
   // }
+
   return new Uint8Array(new TextEncoder().encode(str).buffer);
 };
 
@@ -62,7 +70,7 @@ const padSuffix = (input: string): string => {
  * @returns {string}
  */
 const ab2Base64 = (buffer: Iterable<number>): string =>
-  window.btoa(ab2str(buffer));
+  window.btoa(ab2str(buffer, true));
 
 const base64 = { ab2str, str2ab, padSuffix, ab2Base64 };
 
