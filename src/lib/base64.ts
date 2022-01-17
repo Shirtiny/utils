@@ -1,7 +1,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2022-01-14 16:01:01
- * @LastEditTime: 2022-01-17 11:52:10
+ * @LastEditTime: 2022-01-17 12:09:06
  * @Description:
  */
 
@@ -83,42 +83,6 @@ const fromBase64 = (base64Input: string): string => {
 };
 
 /**
- * @description 将base64转为ur传输安全的格式 base64 url_safe
- * @param {string} base64Input base64字符串
- * @returns {string}
- */
-const toUrlSafe = (base64Input: string): string => {
-  const str = base64Input.replace(/\+/g, "-").replace(/\//g, "_");
-  return str;
-};
-
-/**
- * @description 从base64 url_safe 转为base64
- * @param {string} base64Input base64字符串
- * @returns {string}
- */
-const fromUrlSafe = (base64Input: string): string => {
-  const str = base64Input.replace(/-/g, "+").replace(/_/g, "/");
-  return str;
-};
-
-/**
- * @description 将字符串转为base64 url_safe
- * @param {string} base64Input base64字符串
- * @returns {string}
- */
-const toBase64Url = (str: string): string => toUrlSafe(toBase64(str));
-
-/**
- * @description 从base64 url_safe解析
- * @param {string} base64UrlInput base64 url_safe字符串
- * @returns {string}
- */
-const fromBase64url = (base64UrlInput: string): string => {
-  return fromBase64(fromUrlSafe(base64UrlInput));
-};
-
-/**
  * @description 填充base64后的等号
  * @param {string} base64Input base64字符串
  * @returns {string}
@@ -160,6 +124,42 @@ const removeSuffix = (base64Input: string): string => {
   return pos > 0 ? base64Input.slice(0, pos) : base64Input;
 };
 
+/**
+ * @description 将base64转为ur传输安全的格式 base64 url_safe
+ * @param {string} base64Input base64字符串
+ * @returns {string}
+ */
+const toUrlSafe = (base64Input: string): string => {
+  const str = base64Input.replace(/\+/g, "-").replace(/\//g, "_");
+  return removeSuffix(str);
+};
+
+/**
+ * @description 从base64 url_safe 转为base64
+ * @param {string} base64Input base64字符串
+ * @returns {string}
+ */
+const fromUrlSafe = (base64Input: string): string => {
+  const str = base64Input.replace(/-/g, "+").replace(/_/g, "/");
+  return padSuffix(str);
+};
+
+/**
+ * @description 将字符串转为base64 url_safe
+ * @param {string} base64Input base64字符串
+ * @returns {string}
+ */
+const toBase64Url = (str: string): string => toUrlSafe(toBase64(str));
+
+/**
+ * @description 从base64 url_safe解析
+ * @param {string} base64UrlInput base64 url_safe字符串
+ * @returns {string}
+ */
+const fromBase64url = (base64UrlInput: string): string => {
+  return fromBase64(fromUrlSafe(base64UrlInput));
+};
+
 const base64 = {
   ab2str,
   str2ab,
@@ -167,12 +167,12 @@ const base64 = {
   base642ab,
   toBase64,
   fromBase64,
+  padSuffix,
+  removeSuffix,
   toUrlSafe,
   fromUrlSafe,
   toBase64Url,
   fromBase64url,
-  padSuffix,
-  removeSuffix,
 };
 
 export default base64;

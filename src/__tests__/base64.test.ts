@@ -5,7 +5,7 @@
 /*
  * @Author: Shirtiny
  * @Date: 2022-01-14 16:22:41
- * @LastEditTime: 2022-01-17 11:52:23
+ * @LastEditTime: 2022-01-17 12:08:51
  * @Description:
  */
 import base64 from "../lib/base64";
@@ -46,7 +46,7 @@ describe("base64", () => {
   const LONG_URL_BASE64 =
     "aHR0cHM6Ly9jbi5iaW5nLmNvbS9zZWFyY2g/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/cT1iYXNlNjQrdXJsX3NhZmUrJWU1JTljJWE4JWU3JWJhJWJmJnFzPW4mc3A9LTEmcHE9YmFzZTY0K3VybF9zYWZlKyZzYz0wLTE2JnNrPSZjdmlkPUIyNkYyNUUzRDgwQTRBQzJCNTg2NDNBRjlGNUY2MDQwJmZpcnN0PTE2JkZPUk09UEVSRTE=";
   const LONG_URL_BASE64_URL_SAFE =
-    "aHR0cHM6Ly9jbi5iaW5nLmNvbS9zZWFyY2g_Pz8_Pz8_Pz8_Pz8_Pz8_Pz8_cT1iYXNlNjQrdXJsX3NhZmUrJWU1JTljJWE4JWU3JWJhJWJmJnFzPW4mc3A9LTEmcHE9YmFzZTY0K3VybF9zYWZlKyZzYz0wLTE2JnNrPSZjdmlkPUIyNkYyNUUzRDgwQTRBQzJCNTg2NDNBRjlGNUY2MDQwJmZpcnN0PTE2JkZPUk09UEVSRTE=";
+    "aHR0cHM6Ly9jbi5iaW5nLmNvbS9zZWFyY2g_Pz8_Pz8_Pz8_Pz8_Pz8_Pz8_cT1iYXNlNjQrdXJsX3NhZmUrJWU1JTljJWE4JWU3JWJhJWJmJnFzPW4mc3A9LTEmcHE9YmFzZTY0K3VybF9zYWZlKyZzYz0wLTE2JnNrPSZjdmlkPUIyNkYyNUUzRDgwQTRBQzJCNTg2NDNBRjlGNUY2MDQwJmZpcnN0PTE2JkZPUk09UEVSRTE";
 
   it("ab2str", () => {
     expect(base64.ab2str(abc)).toBe(ABC);
@@ -114,7 +114,7 @@ describe("base64", () => {
     expect(base64.padSuffix("Y0dGa0c")).toBe("Y0dGa0c=");
     expect(base64.padSuffix("c2V0SW50OA")).toBe("c2V0SW50OA==");
   });
-  
+
   it("removeSuffix", () => {
     expect(base64.removeSuffix("cGFkU3VmZml4")).toBe("cGFkU3VmZml4");
     expect(base64.removeSuffix("Y0dGa0c=")).toBe("Y0dGa0c");
