@@ -5,6 +5,8 @@
  * @Description:
  */
 
+import lang from "./lang";
+
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
@@ -17,14 +19,54 @@ const sleepSync = (milliseconds: number) => {
   } while (currentDate - date < milliseconds);
 };
 
-const memo = (func: Function, createHash?: Function): Function => {
-  const memoize = (key: any) => {
-    let cache = memoize.cache;
-    let address = "" + (createHash ? createHash() : key);
-    if (!cache[address]) cache[address] = func();
-    return cache[address];
+const serialize = (...args: any[]) => {
+  return JSON.stringify(args, (_k, v) => (lang.isFn(v) ? String(v) : v));
+};
+
+const memo = (
+  func: Function,
+  createKey?: Function,
+): Function & { cache: Map<any, any> } => {
+  const createKeyFn = createKey || serialize;
+  const map = new Map<string, any>();
+  const memoize = (...args: any[]) => {
+    let key = "" + createKeyFn(...args);
+    if (!map.get(key)) {
+      try {
+        const result = func(...args);
+        map.set(key, result);
+      } catch (e) {
+        console.error(e);
+        return undefined;
+      }
+    }
+    return map.get(key);
   };
-  memoize.cache = {};
+  memoize.cache = new Proxy(map, {
+    get(target, p, receiver) {
+      let methodOrValue = Reflect.get(target, p, receiver);
+      p;
+      if (lang.isFn(methodOrValue)) {
+        const method = methodOrValue.bind(target);
+        const interceptors = {
+          get(...args: any[]) {
+            return method(createKeyFn(...args));
+          },
+          set(...args: any[]) {
+            const result = args.pop();
+            return method(createKeyFn(...args), result);
+          },
+          delete(...args: any[]) {
+            return method(createKeyFn(...args));
+          },
+        };
+        const interceptor = interceptors[p];
+        return interceptor || method;
+      }
+
+      return methodOrValue;
+    },
+  });
   return memoize;
 };
 
@@ -40,6 +82,7 @@ const pipePromises = (...fns: Array<(v: any) => any>) => {
 const util = {
   sleep,
   sleepSync,
+  serialize,
   memo,
   pipe,
   pipePromises,
