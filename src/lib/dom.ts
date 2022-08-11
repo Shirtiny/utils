@@ -87,6 +87,7 @@ function getElementTypeByTag<K extends keyof HTMLElementTagNameMap>(tag: K) {
 }
 
 const dom = {
+  
   parseHtml,
   create,
   createFragment,
