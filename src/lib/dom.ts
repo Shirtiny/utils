@@ -1,6 +1,4 @@
-import { grow } from "./jsx";
-
-type RenderTarget = HTMLElement | SVGElement | Text | DocumentFragment | null;
+import { grow, RenderTarget, JSX } from "./jsx";
 
 function parseHtml(htmlString: string): DocumentFragment {
   return document.createRange().createContextualFragment(htmlString);
@@ -87,7 +85,6 @@ function getElementTypeByTag<K extends keyof HTMLElementTagNameMap>(tag: K) {
 }
 
 const dom = {
-  
   parseHtml,
   create,
   createFragment,

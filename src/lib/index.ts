@@ -20,3 +20,4 @@ export { default as fullscreen } from "./fullscreen";
 export { default as util } from "./util";
 export * from "./customError";
 export * from "./events";
+export * from "./jsx";

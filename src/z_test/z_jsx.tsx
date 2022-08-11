@@ -5,7 +5,7 @@
  * @Description:
  */
 
-import { jsx, style } from "../main";
+import { jsx, style, IJsxProps, FC } from "../main";
 
 const test = () => {
   interface IJsxButtonProps extends IJsxProps {

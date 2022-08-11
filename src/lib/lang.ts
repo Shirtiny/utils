@@ -27,6 +27,13 @@ const isObject = (arg?: any): arg is Object => arg instanceof Object;
 const isArray = Array.isArray;
 
 /**
+ * @description: 判断是否为布尔
+ * @param {any} arg
+ * @return {Boolean} -eg: arg is Boolean
+ */
+const isBoolean = (arg?: any): arg is boolean => typeof arg === "boolean";
+
+/**
  * @description: 判断是否为未定义
  * @param {any} arg
  * @return {Boolean} -eg: arg is Object
@@ -67,6 +74,7 @@ const isText = (arg?: any): arg is number | string =>
 
 const lang = {
   isFn,
+  isBoolean,
   isObject,
   isArray,
   isUndefined,

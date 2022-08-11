@@ -5,7 +5,7 @@
  * @Description:
  */
 
-import { lang } from ".";
+import lang from "./lang";
 
 type Text = string | number;
 
@@ -44,6 +44,41 @@ const cls = (...args: any[]): string => {
   return classes.join(" ");
 };
 
+/**
+ *
+ * @param {object} object k-v 对象 -eg: { size: "small", type: "link", rotate: true }
+ * @param {string} pattern  -eg: template-{k}-{v}
+ * @param {Function} getKeyOnValueIsBool 当v为布尔值时 自定义输出key的值
+ * @returns {string} output classNames
+ */
+const clsPainPattern = (
+  object: object,
+  pattern?: string,
+  getKeyOnValueIsBool?: (v: boolean, outputKey: string) => string,
+) => {
+  const kP = "{k}";
+  const vP = "{v}";
+  const defaultPattern = `${kP}-${vP}`;
+  const isUseDefaultPattern = !pattern;
+  const usedPattern = isUseDefaultPattern ? defaultPattern : pattern;
+
+  const keys = Object.keys(object);
+  const clsParams = keys.map((k) => {
+    const v = object[k];
+
+    let key = usedPattern.split(kP).join(k).split(vP).join(v);
+    if (lang.isBoolean(v)) {
+      isUseDefaultPattern && (key = k);
+      getKeyOnValueIsBool && (key = getKeyOnValueIsBool(v, key));
+    }
+
+    return {
+      [key]: !!v,
+    };
+  });
+  return cls(...clsParams);
+};
+
 const line = (str?: string) => {
   return str ? str.replace(/\s*(;|\{|\})+\s*[\n\r]*/g, "$1") : "";
 };
@@ -65,6 +100,7 @@ const css = (literals: TemplateStringsArray, ...values: Text[]) => {
 
 const style = {
   cls,
+  clsPainPattern,
   css,
   line,
 };

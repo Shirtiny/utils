@@ -8,7 +8,43 @@
 import lang from "./lang";
 import logger from "../utils/logger";
 
-type RenderTarget = HTMLElement | SVGElement | Text | DocumentFragment | null;
+export type RenderTarget =
+  | HTMLElement
+  | SVGElement
+  | Text
+  | DocumentFragment
+  | null;
+
+export interface IJsxProps extends Record<string, any> {
+  children?: Array<any>;
+}
+
+// 暂时不写那么复杂
+// 注意创建的元素不只有htmlElement 这里只写通用jsx属性
+// 想要定义某个elemName的属性 在IntrinsicElements新增行 格式为元素名称和对应接口
+export interface ICommonJsxAttributes extends Record<string, any> {
+  className?: string;
+  style?: string;
+}
+
+// 函数式
+export interface FC<P extends IJsxProps = any> {
+  (props: P): JSX.Element | null;
+  tag?: number;
+  type?: string;
+}
+
+// jsx类型定义
+export declare namespace JSX {
+  interface Element<P extends IJsxProps = any> {
+    type: string | FC<P>;
+    props: P;
+    // key: string; 因为只用来创建 所以不管key
+  }
+  interface IntrinsicElements {
+    [elemName: string]: ICommonJsxAttributes;
+  }
+}
 
 function some(x: unknown) {
   return x != null && x !== true && x !== false;
