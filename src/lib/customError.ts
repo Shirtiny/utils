@@ -23,6 +23,10 @@ class CustomError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
     fixStack(this);
   }
+
+  toString() {
+    return `Error: ${this.message}, ${new Error().stack}`;
+  }
 }
 
 export { CustomError };
