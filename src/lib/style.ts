@@ -10,7 +10,7 @@ import lang from "./lang";
 type Text = string | number;
 
 // 输入数组、对象、字符串 输出为 class字符串
-const cls = (...args: any[]): string => {
+export const cls = (...args: any[]): string => {
   const classes: Text[] = [];
 
   for (let i = 0; i < args.length; i++) {
@@ -51,7 +51,7 @@ const cls = (...args: any[]): string => {
  * @param {Function} getKeyOnValueIsBool 当v为布尔值时 自定义输出key的值
  * @returns {string} output classNames
  */
-const clsPainPattern = (
+export const clsPainPattern = (
   object: object,
   pattern?: string,
   getKeyOnValueIsBool?: (v: boolean, outputKey: string) => string,
@@ -79,11 +79,11 @@ const clsPainPattern = (
   return cls(...clsParams);
 };
 
-const line = (str?: string) => {
+export const line = (str?: string) => {
   return str ? str.replace(/\s*(;|\{|\})+\s*[\n\r]*/g, "$1") : "";
 };
 
-const css = (literals: TemplateStringsArray, ...values: Text[]) => {
+export const css = (literals: TemplateStringsArray, ...values: Text[]) => {
   // 模板字符串无变量时 values为空数组 literals数组只有一个值 是模版字符串本身
   if (!values.length) {
     return line(literals[0]);

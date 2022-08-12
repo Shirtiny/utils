@@ -6,7 +6,7 @@
  */
 
 // 读取文件
-const read = (exec: (reader: FileReader) => void): Promise<any> => {
+export const read = (exec: (reader: FileReader) => void): Promise<any> => {
   const reader = new FileReader();
 
   return new Promise((resolve, reject) => {
@@ -20,7 +20,7 @@ const read = (exec: (reader: FileReader) => void): Promise<any> => {
   });
 };
 
-const download = (url: string, fileName: string, suffixName: string) => {
+export const download = (url: string, fileName: string, suffixName: string) => {
   const link = document.createElement("a");
   link.href = url;
   link.download = `${fileName}.${suffixName}`;
@@ -30,7 +30,7 @@ const download = (url: string, fileName: string, suffixName: string) => {
   document.body.removeChild(link);
 };
 
-const downLoadBlob = (
+export const downLoadBlob = (
   blob: Blob | null,
   fileName: string,
   suffixName: string,
@@ -45,7 +45,7 @@ const isSupportFileSystem = () => {
   return !!window.showDirectoryPicker;
 };
 
-const downloadToDirectory = async (
+export const downloadToDirectory = async (
   blob: Blob | null,
   fileName: string,
   suffixName: string,
@@ -62,7 +62,8 @@ const downloadToDirectory = async (
 };
 
 const file = {
-  read, download,
+  read,
+  download,
   downLoadBlob,
   downloadToDirectory,
 };

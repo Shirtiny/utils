@@ -17,7 +17,7 @@ interface IStorageData {
  * @param {any} value 值
  * @param {number} expire 到期时间戳
  */
-const set = (key: string, value: any, expire: number) => {
+export const set = (key: string, value: any, expire: number) => {
   const data: IStorageData = {
     value,
     expire,
@@ -33,7 +33,7 @@ const set = (key: string, value: any, expire: number) => {
  * @param {any} value 值
  * @param {number} timeoutSeconds 秒数
  */
-const setTimeout = (
+export const setTimeout = (
   key: string,
   value: object | string,
   timeoutSeconds: number,
@@ -48,7 +48,7 @@ const setTimeout = (
  * @param {String} key 键
  * @param {Boolean} origin 是否取出原值
  */
-const get = (key: string, origin?: boolean): any => {
+export const get = (key: string, origin?: boolean): any => {
   const dataJson = localStorage.getItem(key);
   if (!dataJson) return null;
   try {
@@ -70,7 +70,7 @@ const get = (key: string, origin?: boolean): any => {
   }
 };
 
-const remove = (key: string) => {
+export const remove = (key: string) => {
   return localStorage.removeItem(key);
 };
 

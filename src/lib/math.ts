@@ -5,7 +5,7 @@
  * @Description:
  */
 
-const restrict = (value: number, min: number, max: number) => {
+export const restrict = (value: number, min: number, max: number) => {
   return Math.min(Math.max(value, min), max);
 };
 

@@ -7,11 +7,11 @@
 
 import lang from "./lang";
 
-const sleep = (ms: number) => {
+export const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-const sleepSync = (milliseconds: number) => {
+export const sleepSync = (milliseconds: number) => {
   const date = Date.now();
   let currentDate: number | null = null;
   do {
@@ -19,11 +19,11 @@ const sleepSync = (milliseconds: number) => {
   } while (currentDate - date < milliseconds);
 };
 
-const serialize = (...args: any[]) => {
+export const serialize = (...args: any[]) => {
   return JSON.stringify(args, (_k, v) => (lang.isFn(v) ? String(v) : v));
 };
 
-const memo = (
+export const memo = (
   func: Function,
   createKey?: Function,
 ): Function & { cache: Map<any, any> } => {
@@ -70,11 +70,11 @@ const memo = (
   return memoize;
 };
 
-const pipe = (...fns: Function[]) => {
+export const pipe = (...fns: Function[]) => {
   return (input: any) => fns.reduce((r, fn) => fn(r), input);
 };
 
-const pipePromises = (...fns: Array<(v: any) => any>) => {
+export const pipePromises = (...fns: Array<(v: any) => any>) => {
   return (input: any) =>
     fns.reduce((promise, fn) => promise.then(fn), Promise.resolve(input));
 };

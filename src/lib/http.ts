@@ -26,7 +26,7 @@ interface RequestConfig {
   timeout?: number;
 }
 
-const request = async (url: string, config: RequestConfig) => {
+export const request = async (url: string, config: RequestConfig) => {
   const abortController = new AbortController();
 
   if (config.signal) {
@@ -86,7 +86,7 @@ interface Http {
   post(url: string, param?: object, option?: HttpOption): Promise<any>;
 }
 
-const get = async (
+export const get = async (
   url: string,
   param?: URLSearchParams,
   option?: HttpOption,

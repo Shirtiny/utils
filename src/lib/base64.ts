@@ -13,7 +13,7 @@ import logger from "../utils/logger";
  * @param {boolean} noEncode 不使用utf8解码
  * @returns {string}
  */
-const ab2str = (
+export const ab2str = (
   buffer: Iterable<number>,
   noEncode: boolean = false,
 ): string => {
@@ -29,7 +29,7 @@ const ab2str = (
  * @param {boolean} noEncode 不使用utf8解码
  * @returns {Uint8Array} Uint8Array
  */
-const str2ab = (str: string, noEncode: boolean = false): Uint8Array => {
+export const str2ab = (str: string, noEncode: boolean = false): Uint8Array => {
   if (noEncode) {
     const buffer = new ArrayBuffer(str.length);
     const bufferView = new Uint8Array(buffer);
@@ -47,7 +47,7 @@ const str2ab = (str: string, noEncode: boolean = false): Uint8Array => {
  * @param {Iterable<number>} buffer
  * @returns {string}
  */
-const ab2Base64 = (buffer: Iterable<number>): string => {
+export const ab2Base64 = (buffer: Iterable<number>): string => {
   const str = ab2str(buffer, true);
   return window.btoa(str);
 };
@@ -57,7 +57,7 @@ const ab2Base64 = (buffer: Iterable<number>): string => {
  * @param {string} base64Input base64字符串
  * @returns {Uint8Array} Uint8Array
  */
-const base642ab = (base64Input: string): Uint8Array => {
+export const base642ab = (base64Input: string): Uint8Array => {
   const str = window.atob(base64Input);
   return str2ab(str, true);
 };
@@ -67,7 +67,7 @@ const base642ab = (base64Input: string): Uint8Array => {
  * @param {string} str 字符串
  * @returns {string} base64字符串
  */
-const toBase64 = (str: string): string => {
+export const toBase64 = (str: string): string => {
   const ab = str2ab(str);
   return ab2Base64(ab);
 };
@@ -77,7 +77,7 @@ const toBase64 = (str: string): string => {
  * @param {string} base64Input base64字符串
  * @returns {string} 字符串
  */
-const fromBase64 = (base64Input: string): string => {
+export const fromBase64 = (base64Input: string): string => {
   const ab = base642ab(base64Input);
   return ab2str(ab);
 };
@@ -87,7 +87,7 @@ const fromBase64 = (base64Input: string): string => {
  * @param {string} base64Input base64字符串
  * @returns {string}
  */
-const padSuffix = (base64Input: string): string => {
+export const padSuffix = (base64Input: string): string => {
   let num = 0;
   const mo = base64Input.length % 4;
   switch (mo) {
@@ -119,7 +119,7 @@ const padSuffix = (base64Input: string): string => {
  * @param {string} base64Input base64字符串
  * @returns {string}
  */
-const removeSuffix = (base64Input: string): string => {
+export const removeSuffix = (base64Input: string): string => {
   const pos = base64Input.indexOf("=");
   return pos > 0 ? base64Input.slice(0, pos) : base64Input;
 };
@@ -129,7 +129,7 @@ const removeSuffix = (base64Input: string): string => {
  * @param {string} base64Input base64字符串
  * @returns {string}
  */
-const toUrlSafe = (base64Input: string): string => {
+export const toUrlSafe = (base64Input: string): string => {
   const str = base64Input.replace(/\+/g, "-").replace(/\//g, "_");
   return removeSuffix(str);
 };
@@ -139,7 +139,7 @@ const toUrlSafe = (base64Input: string): string => {
  * @param {string} base64Input base64字符串
  * @returns {string}
  */
-const fromUrlSafe = (base64Input: string): string => {
+export const fromUrlSafe = (base64Input: string): string => {
   const str = base64Input.replace(/-/g, "+").replace(/_/g, "/");
   return padSuffix(str);
 };
@@ -149,14 +149,14 @@ const fromUrlSafe = (base64Input: string): string => {
  * @param {string} base64Input base64字符串
  * @returns {string}
  */
-const toBase64Url = (str: string): string => toUrlSafe(toBase64(str));
+export const toBase64Url = (str: string): string => toUrlSafe(toBase64(str));
 
 /**
  * @description 从base64 url_safe解析
  * @param {string} base64UrlInput base64 url_safe字符串
  * @returns {string}
  */
-const fromBase64url = (base64UrlInput: string): string => {
+export const fromBase64url = (base64UrlInput: string): string => {
   return fromBase64(fromUrlSafe(base64UrlInput));
 };
 

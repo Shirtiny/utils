@@ -169,7 +169,7 @@ export function grow(
   return null;
 }
 
-function createElement<K extends keyof HTMLElementTagNameMap>(
+export  function createElement<K extends keyof HTMLElementTagNameMap>(
   type: K | string,
   elementProps: any,
   ...childElements: any[]
@@ -183,12 +183,15 @@ function createElement<K extends keyof HTMLElementTagNameMap>(
   };
 }
 
-const Fragment = (props: IJsxProps) => props.children;
+export  const Fragment = (props: IJsxProps) => props.children;
+
+export const createDom = grow
 
 const jsx = {
   createElement,
   Fragment,
-  createDom: grow,
+  grow,
+  createDom,
 };
 
 export default jsx;

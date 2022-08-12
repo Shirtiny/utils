@@ -93,7 +93,7 @@ interface ITimerTaskOption {
  * @param {ITimerTaskOption} option
  * @return {*}
  */
-const createTimerTask = (option: ITimerTaskOption): ObservableTask => {
+ export const createTimerTask = (option: ITimerTaskOption): ObservableTask => {
   const {
     name = "",
     sec = 5,
@@ -124,7 +124,7 @@ interface IRetryTaskOption {
  * @param {IRetryTaskOption} option
  * @return {*}
  */
-const createRetryTask = (option: IRetryTaskOption): ITask => {
+ export const createRetryTask = (option: IRetryTaskOption): ITask => {
   const {
     name = "",
     delay = 0,
@@ -164,7 +164,7 @@ interface IMouseHoveringOption {
   onHidden?(target: HTMLElement): void;
 }
 
-const mouseHovering = (options: IMouseHoveringOption): void => {
+export const mouseHovering = (options: IMouseHoveringOption): void => {
   const { target, wait, onDisplay, onHidden } = options;
   if (!target) return;
 

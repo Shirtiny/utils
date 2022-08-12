@@ -90,7 +90,7 @@ function isFull(el: HTMLElement | EventTarget): boolean {
  * @param  {HTMLElement} 目标元素
  * @returns {Promise}
  */
-function toggle(
+ export function toggle(
   el: HTMLElement = DOC_EL,
   options?: FullscreenOptions,
 ): Promise<void> {
@@ -106,7 +106,7 @@ function toggle(
  * @param  {HTMLElement} 元素
  * @param  {(isFull: boolean) => void} 返回"是否全屏"
  */
-function watch(el: HTMLElement, callback: (isFull: boolean) => void) {
+ export function watch(el: HTMLElement, callback: (isFull: boolean) => void) {
   const cancel = () => {
     el.onfullscreenchange = null;
   };

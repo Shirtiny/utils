@@ -1,10 +1,10 @@
 import { grow, RenderTarget, JSX } from "./jsx";
 
-function parseHtml(htmlString: string): DocumentFragment {
+export function parseHtml(htmlString: string): DocumentFragment {
   return document.createRange().createContextualFragment(htmlString);
 }
 
-function create<K extends keyof HTMLElementTagNameMap>(
+export function create<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   properties?: object,
   is?: string,
@@ -14,18 +14,21 @@ function create<K extends keyof HTMLElementTagNameMap>(
   return Object.assign(element, properties);
 }
 
-function createFragment() {
+export function createFragment() {
   return document.createDocumentFragment();
 }
 
-function append<N extends Node>(parent?: N | null, ...children: any[]): void {
+export function append<N extends Node>(
+  parent?: N | null,
+  ...children: any[]
+): void {
   if (!parent) return;
   const frag = createFragment();
   frag.append(...(children.filter((n) => n) as N[]));
   parent.appendChild(frag);
 }
 
-function empty<N extends Node>(parent?: N | null): void {
+export function empty<N extends Node>(parent?: N | null): void {
   if (!parent) return;
   if (parent instanceof Element) {
     parent.innerHTML = "";
@@ -37,7 +40,7 @@ function empty<N extends Node>(parent?: N | null): void {
   }
 }
 
-function replace<N extends Node>(
+export function replace<N extends Node>(
   oldNode: N | null | undefined,
   ...newNodes: any[]
 ): void {
@@ -52,7 +55,7 @@ function replace<N extends Node>(
   }
 }
 
-function removeSelf<N extends Node>(el?: N | null): void {
+export function removeSelf<N extends Node>(el?: N | null): void {
   if (!el) return;
   if (el instanceof Element) {
     el.remove();
@@ -74,12 +77,16 @@ function elementFactory(element: JSX.Element | null) {
 }
 
 // 从jsx创建dom节点
-function createByJsx<T = RenderTarget>(element: JSX.Element | null): T | null {
+export function createByJsx<T = RenderTarget>(
+  element: JSX.Element | null,
+): T | null {
   if (!element) return null;
   return <T>(<unknown>grow(element, elementFactory));
 }
 
-function getElementTypeByTag<K extends keyof HTMLElementTagNameMap>(tag: K) {
+export function getElementTypeByTag<K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+) {
   return Reflect.getPrototypeOf(document.createElement(tag))!
     .constructor as any;
 }

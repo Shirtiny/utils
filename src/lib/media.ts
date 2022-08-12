@@ -11,7 +11,9 @@ interface IStreamProvider {
   captureStream(frameRate?: number): MediaStream;
 }
 
-const canvasToBlob = (canvas: HTMLCanvasElement): Promise<Blob | null> => {
+export const canvasToBlob = (
+  canvas: HTMLCanvasElement,
+): Promise<Blob | null> => {
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
       if (!blob) {
@@ -22,7 +24,7 @@ const canvasToBlob = (canvas: HTMLCanvasElement): Promise<Blob | null> => {
   });
 };
 
-const screenshotByCanvas = async (
+export const screenshotByCanvas = async (
   canvas?: HTMLCanvasElement | null,
   fileName: string = `screenshot_${Date.now()}`,
 ) => {
@@ -35,7 +37,7 @@ const screenshotByCanvas = async (
   }
 };
 
-const screenshot = async (
+export const screenshot = async (
   videoEl?: HTMLVideoElement | null,
   fileName: string = `screenshot_${Date.now()}`,
 ) => {
@@ -50,7 +52,7 @@ const screenshot = async (
   await screenshotByCanvas(canvas, fileName);
 };
 
-const record = (
+export const record = (
   element: IStreamProvider,
   fileName: string = `record_${Date.now()}`,
 ): MediaRecorder | null => {
