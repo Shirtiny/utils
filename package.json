@@ -1,6 +1,6 @@
 {
   "name": "@shirtiny/utils",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "utils desc",
   "types": "./dist/types/main.d.ts",
   "main": "./dist/main.es.js",
@@ -17,9 +17,11 @@
       "import": "./dist/main.es.js"
     },
     "./lib": {
+      "types": "./dist/types/lib/index.d.ts",
       "import": "./dist/lib/index.js"
     },
     "./lib/*": {
+      "types": "./dist/types/lib/*.d.ts",
       "import": "./dist/lib/*.js"
     },
     "./jsx-runtime": {
@@ -32,7 +34,7 @@
     "build": "npm run clean && dotenv -c production node config/builder.js",
     "test": "jest",
     "lint": "eslint --max-warnings 0 . --ext .ts",
-    "clean": "shx rm -rf dist",
+    "clean": "shx rm -rf dist lib",
     "ts-node": "ts-node"
   },
   "repository": {
