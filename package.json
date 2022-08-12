@@ -1,6 +1,6 @@
 {
   "name": "@shirtiny/utils",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "utils desc",
   "types": "./dist/types/main.d.ts",
   "main": "./dist/main.es.js",
@@ -18,6 +18,9 @@
     },
     "./lib": {
       "import": "./dist/lib/index.js"
+    },
+    "./lib/*": {
+      "import": "./dist/lib/*.js"
     },
     "./jsx-runtime": {
       "import": "./jsx-runtime.js",
