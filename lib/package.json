@@ -3,5 +3,10 @@
   "types": "../dist/types/lib/index.d.ts",
   "main": "../dist/lib/index.js",
   "module": "../dist/lib/index.js",
+  "exports": {
+    "./*": {
+      "import": "./dist/lib/*.js"
+    }
+  },
   "sideEffects": false
 }
