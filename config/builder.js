@@ -10,9 +10,11 @@ const path = require("path");
 const { config, isDev } = require("./var");
 const logger = require("./logger");
 const { readdirSync } = require("fs");
+const util = require("./util");
 
 const srcDirPath = "../src";
 const distDirPath = "../dist";
+const libGuideDirPath = "../lib";
 const libDirRelativePath = "/lib";
 const depDirRelativePath = "/utils";
 
@@ -25,7 +27,7 @@ const createFilePath = (dirPath, fileName) => {
   return path.resolve(__dirname, `${dirPath}/${fileName}`);
 };
 
-const getLibNames = () => {
+const getLibFileNames = () => {
   return readdirSync(
     path.resolve(__dirname, srcDirPath + libDirRelativePath),
   ).filter((f) => /\.(js|ts)$/.test(f));
@@ -46,7 +48,7 @@ const buildList = [
     bundle: false,
   },
   {
-    entryPoints /* ? */: getLibNames().map((f) =>
+    entryPoints /* ? */: getLibFileNames().map((f) =>
       createFilePath(srcDirPath + libDirRelativePath, f),
     ),
     platform: "neutral",
@@ -96,11 +98,56 @@ const build = async ({
   }
 };
 
+const generateLibGuides = async () => {
+  const topDirPath = path.resolve(__dirname, `${libGuideDirPath}`);
+  await util.mkdir(topDirPath, true);
+  const topPackageJson = {
+    name: "@shirtiny/utils/lib",
+    types: "../dist/types/lib/index.d.ts",
+    main: "../dist/lib",
+    module: "../dist/lib",
+    exports: {
+      "./*": {
+        import: "./dist/lib/*.js",
+      },
+    },
+    sideEffects: false,
+  };
+  util.writeFile(
+    `${topDirPath}/package.json`,
+    JSON.stringify(topPackageJson, null, "  "),
+  );
+
+  const libFileNames = getLibFileNames();
+  libFileNames.map(async (libFileName) => {
+    const libName = libFileName.slice(
+      0,
+      Math.max(libFileName.lastIndexOf("."), 0),
+    );
+    const childPackageJson = {
+      name: `@shirtiny/utils/lib/${libName}`,
+      types: `../../dist/types/lib/${libName}.d.ts`,
+      main: `../../dist/lib/${libName}`,
+      module: `../../dist/lib/${libName}`,
+      sideEffects: false,
+    };
+    const dirPath = `${topDirPath}/${libName}`;
+    const filePath = dirPath + "/package.json";
+
+    const fileContent = JSON.stringify(childPackageJson, null, "  ");
+
+    logger.log(`generate lib guide dir ${libName}... \n`);
+    await util.mkdir(dirPath, true);
+    util.writeFile(filePath, fileContent);
+  });
+};
+
 const buildAll = async () => {
   logger.log("o(*^▽^*)┛ bundle, please wait...\n");
   const promises = buildList.map((item) => build(item));
   try {
     await Promise.all(promises);
+    await generateLibGuides();
     logger.log("\n♪(^∇^*) done~☆!");
   } catch (e) {
     console.log(e.message);

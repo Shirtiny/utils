@@ -20,11 +20,17 @@ const isPathExisted = async (path) => {
   });
 };
 
-const mkdir = async (dirPath) => {
-  const isExisted = await isPathExisted(dirPath);
-  if (!isExisted) {
-    fs.mkdirSync(dirPath);
+const mkdir = async (dirPath, force = false) => {
+  let isExisted = await isPathExisted(dirPath);
+  if (isExisted && force) {
+    fs.rmSync(dirPath, { recursive: true, force: true });
+    isExisted = false;
   }
+  !isExisted && fs.mkdirSync(dirPath);
+};
+
+const writeFile = (path, content) => {
+  fs.writeFileSync(path, content);
 };
 
 const rm = (path) => {
@@ -39,5 +45,6 @@ module.exports = {
   isPathExisted,
   mkdir,
   rm,
-  cpAllDirChildsToDir
+  cpAllDirChildsToDir,
+  writeFile,
 };
