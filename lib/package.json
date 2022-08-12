@@ -1,8 +1,8 @@
 {
   "name": "@shirtiny/utils/lib",
   "types": "../dist/types/lib/index.d.ts",
-  "main": "../dist/lib/index.js",
-  "module": "../dist/lib/index.js",
+  "main": "../dist/lib",
+  "module": "../dist/lib",
   "exports": {
     "./*": {
       "import": "./dist/lib/*.js"

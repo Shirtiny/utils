@@ -1,7 +1,0 @@
-{
-  "name": "@shirtiny/utils/lib/style",
-  "types": "../../dist/types/lib/index.d.ts",
-  "main": "../../dist/lib/style.js",
-  "module": "../../dist/lib/style.js",
-  "sideEffects": false
-}
