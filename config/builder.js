@@ -119,27 +119,29 @@ const generateLibGuides = async () => {
   );
 
   const libFileNames = getLibFileNames();
-  libFileNames.map(async (libFileName) => {
-    const libName = libFileName.slice(
-      0,
-      Math.max(libFileName.lastIndexOf("."), 0),
-    );
-    const childPackageJson = {
-      name: `@shirtiny/utils/lib/${libName}`,
-      types: `../../dist/types/lib/${libName}.d.ts`,
-      main: `../../dist/lib/${libName}`,
-      module: `../../dist/lib/${libName}`,
-      sideEffects: false,
-    };
-    const dirPath = `${topDirPath}/${libName}`;
-    const filePath = dirPath + "/package.json";
+  libFileNames
+    .filter((n) => n !== "index.ts")
+    .map(async (libFileName) => {
+      const libName = libFileName.slice(
+        0,
+        Math.max(libFileName.lastIndexOf("."), 0),
+      );
+      const childPackageJson = {
+        name: `@shirtiny/utils/lib/${libName}`,
+        types: `../../dist/types/lib/${libName}.d.ts`,
+        main: `../../dist/lib/${libName}`,
+        module: `../../dist/lib/${libName}`,
+        sideEffects: false,
+      };
+      const dirPath = `${topDirPath}/${libName}`;
+      const filePath = dirPath + "/package.json";
 
-    const fileContent = JSON.stringify(childPackageJson, null, "  ");
+      const fileContent = JSON.stringify(childPackageJson, null, "  ");
 
-    logger.log(`generate lib guide dir ${libName}... \n`);
-    await util.mkdir(dirPath, true);
-    util.writeFile(filePath, fileContent);
-  });
+      logger.log(`generate lib guide dir ${libName}... \n`);
+      await util.mkdir(dirPath, true);
+      util.writeFile(filePath, fileContent);
+    });
 };
 
 const buildAll = async () => {
