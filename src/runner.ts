@@ -20,11 +20,15 @@ run({ a: 1 }); //?.$
 
 run.cache.get({ a: 1 }); //?
 
-style.clsPainPattern(
-  {
-    size: true,
-    type: "link",
-    rotate: true,
-    transform: true,
-  }
-); //?
+style.clsPainPattern({
+  size: true,
+  type: "link",
+  rotate: true,
+  transform: true,
+}); //?
+
+const a = {b: 2, c: {d: 1}};
+util.deepFreeze(a);
+a;
+
+

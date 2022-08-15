@@ -79,6 +79,23 @@ export const pipePromises = (...fns: Array<(v: any) => any>) => {
     fns.reduce((promise, fn) => promise.then(fn), Promise.resolve(input));
 };
 
+// 深冻结函数。
+export const deepFreeze = (obj: object) => {
+  // 取回定义在 obj 上的属性名
+  var propNames = Object.getOwnPropertyNames(obj);
+
+  // 在冻结自身之前冻结属性
+  propNames.forEach(function (name) {
+    const prop = obj[name];
+
+    // 如果 prop 是个对象，冻结它
+    if (typeof prop == "object" && prop !== null) deepFreeze(prop);
+  });
+
+  // 冻结自身 (no-op if already frozen)
+  return Object.freeze(obj);
+};
+
 const util = {
   sleep,
   sleepSync,
@@ -86,6 +103,7 @@ const util = {
   memo,
   pipe,
   pipePromises,
+  deepFreeze,
 };
 
 export default util;
