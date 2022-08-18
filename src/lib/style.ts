@@ -45,7 +45,7 @@ export const cls = (...args: any[]): string => {
 };
 
 /**
- *
+ * @description create classname with a pain template, default pattern: {k}-{v}
  * @param {object} object k-v 对象 -eg: { size: "small", type: "link", rotate: true }
  * @param {string} pattern  -eg: template-{k}-{v}
  * @param {Function} getKeyOnValueIsBool 当v为布尔值时 自定义输出key的值
@@ -55,7 +55,7 @@ export const clsPainPattern = (
   object: object,
   pattern?: string,
   getKeyOnValueIsBool?: (v: boolean, outputKey: string) => string,
-) => {
+): string => {
   const kP = "{k}";
   const vP = "{v}";
   const defaultPattern = `${kP}-${vP}`;
