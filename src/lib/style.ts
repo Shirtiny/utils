@@ -9,6 +9,81 @@ import lang from "./lang";
 
 type Text = string | number;
 
+/**
+ * CSS properties which accept numbers but are not in units of "px".
+ */
+export const isUnitlessNumber = {
+  animationIterationCount: true,
+  aspectRatio: true,
+  borderImageOutset: true,
+  borderImageSlice: true,
+  borderImageWidth: true,
+  boxFlex: true,
+  boxFlexGroup: true,
+  boxOrdinalGroup: true,
+  columnCount: true,
+  columns: true,
+  flex: true,
+  flexGrow: true,
+  flexPositive: true,
+  flexShrink: true,
+  flexNegative: true,
+  flexOrder: true,
+  gridArea: true,
+  gridRow: true,
+  gridRowEnd: true,
+  gridRowSpan: true,
+  gridRowStart: true,
+  gridColumn: true,
+  gridColumnEnd: true,
+  gridColumnSpan: true,
+  gridColumnStart: true,
+  fontWeight: true,
+  lineClamp: true,
+  lineHeight: true,
+  opacity: true,
+  order: true,
+  orphans: true,
+  tabSize: true,
+  widows: true,
+  zIndex: true,
+  zoom: true,
+
+  // SVG-related properties
+  fillOpacity: true,
+  floodOpacity: true,
+  stopOpacity: true,
+  strokeDasharray: true,
+  strokeDashoffset: true,
+  strokeMiterlimit: true,
+  strokeOpacity: true,
+  strokeWidth: true,
+};
+
+/**
+ * @param {string} prefix vendor-specific prefix, eg: Webkit
+ * @param {string} key style name, eg: transitionDuration
+ * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
+ * WebkitTransitionDuration
+ */
+function prefixKey(prefix: string, key: string): string {
+  return prefix + key.charAt(0).toUpperCase() + key.substring(1);
+}
+
+/**
+ * Support style names that may come passed in prefixed by adding permutations
+ * of vendor prefixes.
+ */
+const prefixes = ["Webkit", "ms", "Moz", "O"];
+
+// Using Object.keys here, or else the vanilla for-in loop makes IE8 go into an
+// infinite loop, because it iterates over the newly added props too.
+Object.keys(isUnitlessNumber).forEach(function (prop) {
+  prefixes.forEach(function (prefix) {
+    isUnitlessNumber[prefixKey(prefix, prop)] = isUnitlessNumber[prop];
+  });
+});
+
 // 输入数组、对象、字符串 输出为 class字符串
 export const cls = (...args: any[]): string => {
   const classes: Text[] = [];
@@ -98,11 +173,69 @@ export const css = (literals: TemplateStringsArray, ...values: Text[]) => {
   return line(cssStr);
 };
 
+export const parseStyleValue = (
+  styleName: string,
+  styleValue: any,
+  isCustomProperty: boolean,
+) => {
+  const isEmpty =
+    styleValue == null || typeof styleValue === "boolean" || styleValue === "";
+  if (isEmpty) {
+    return "";
+  }
+
+  if (
+    !isCustomProperty &&
+    typeof styleValue === "number" &&
+    styleValue !== 0 &&
+    !(isUnitlessNumber.hasOwnProperty(styleName) && isUnitlessNumber[styleName])
+  ) {
+    return styleValue + "px"; // Presumes implicit 'px' suffix for unitless numbers
+  }
+  return ("" + styleValue).trim();
+};
+
+export const toCSSStyle = (
+  styles?: Object,
+  options?: {
+    onCustomProperty: (styleName: string, styleValue: string) => void;
+  },
+): Partial<CSSStyleDeclaration> => {
+  const { onCustomProperty } = options || {};
+  const CSSStyle = {};
+  if (!styles) return CSSStyle;
+  for (let styleName in styles) {
+    if (!styles.hasOwnProperty(styleName)) {
+      continue;
+    }
+
+    const isCustomProperty = styleName.indexOf("--") === 0;
+
+    const styleValue = parseStyleValue(
+      styleName,
+      styles[styleName],
+      isCustomProperty,
+    );
+
+    if (styleName === "float") {
+      styleName = "cssFloat";
+    }
+
+    if (isCustomProperty) {
+      onCustomProperty && onCustomProperty(styleName, styleValue);
+    } else {
+      CSSStyle[styleName] = styleValue;
+    }
+  }
+  return CSSStyle;
+};
+
 const style = {
   cls,
   clsPainPattern,
   css,
   line,
+  toCSSStyle
 };
 
 export default style;

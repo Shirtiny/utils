@@ -1,4 +1,6 @@
+import lang from "./lang";
 import { grow, RenderTarget, JSX } from "./jsx";
+import { style } from ".";
 
 export function parseHtml(htmlString: string): DocumentFragment {
   return document.createRange().createContextualFragment(htmlString);
@@ -91,6 +93,56 @@ export function getElementTypeByTag<K extends keyof HTMLElementTagNameMap>(
     .constructor as any;
 }
 
+export function toAttribute(propName: string) {
+  return propName
+    .replace(/\.?([A-Z]+)/g, (_x, y) => y.toLowerCase())
+    .replace("_", "-")
+    .replace(/^-/, "");
+}
+
+export function applyAttribute(
+  el: Element,
+  attributeName: string | undefined,
+  value: any,
+) {
+  if (!el || !(el instanceof Element)) return;
+  if (!attributeName) return;
+  if (lang.isObject(value)) return;
+
+  let reflect = value
+    ? typeof value.toString === "function"
+      ? value.toString()
+      : undefined
+    : undefined;
+
+  const attribute = toAttribute(attributeName);
+  if (reflect && reflect !== "false") {
+    if (reflect === "true") reflect = "";
+    el.setAttribute(attribute, reflect);
+  } else {
+    el.removeAttribute(attribute);
+  }
+}
+
+export function applyStyle(el: RenderTarget, styles: Object | string) {
+  if (!el || !(el instanceof HTMLElement)) return;
+  if (lang.isString(styles)) {
+    el.setAttribute("style", style.line(styles));
+    return;
+  }
+  const cssStyle = style.toCSSStyle(styles, {
+    onCustomProperty: (name, value) => {
+      el.style.setProperty(name, value);
+    },
+  });
+  for (const name in cssStyle) {
+    if (Object.prototype.hasOwnProperty.call(cssStyle, name)) {
+      const value = cssStyle[name];
+      !lang.isUndefined(value) && (el.style[name] = value);
+    }
+  }
+}
+
 const dom = {
   parseHtml,
   create,
@@ -101,6 +153,9 @@ const dom = {
   replace,
   removeSelf,
   getElementTypeByTag,
+  toAttribute,
+  applyAttribute,
+  applyStyle,
 };
 
 export default dom;

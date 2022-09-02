@@ -14,6 +14,7 @@ export { default as math } from "./math";
 export { default as base64 } from "./base64";
 export { default as reactiveX } from "./reactiveX";
 export { default as storage } from "./storage";
+export { default as dom } from "./dom";
 export { default as style } from "./style";
 export { default as jsx } from "./jsx";
 export { default as fullscreen } from "./fullscreen";

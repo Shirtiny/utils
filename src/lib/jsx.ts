@@ -7,6 +7,7 @@
 
 import lang from "./lang";
 import logger from "../utils/logger";
+import dom from "./dom";
 
 export type RenderTarget =
   | HTMLElement
@@ -24,7 +25,7 @@ export interface IJsxProps extends Record<string, any> {
 // 想要定义某个elemName的属性 在IntrinsicElements新增行 格式为元素名称和对应接口
 export interface ICommonJsxAttributes extends Record<string, any> {
   className?: string;
-  style?: string;
+  style?: string | CSSStyleDeclaration;
 }
 
 // 函数式
@@ -78,9 +79,27 @@ function initProps(props: IJsxProps = {}, el: RenderTarget): void {
     if (k.startsWith("on")) {
       el.addEventListener(k.substring(2).toLowerCase(), v);
     } else {
-      el instanceof Element
-        ? el.setAttribute(k === "className" ? "class" : k, v)
-        : ((<any>el)[k] = v);
+      let attribute = k,
+        value = v;
+      switch (k) {
+        case "className": {
+          attribute = "class";
+          break;
+        }
+        case "style": {
+          dom.applyStyle(el, v);
+          return;
+        }
+
+        default: {
+          break;
+        }
+      }
+      if (el instanceof Element) {
+        dom.applyAttribute(el, attribute, value);
+      } else {
+        (<any>el)[attribute] = value;
+      }
     }
   });
 }
@@ -169,7 +188,7 @@ export function grow(
   return null;
 }
 
-export  function createElement<K extends keyof HTMLElementTagNameMap>(
+export function createElement<K extends keyof HTMLElementTagNameMap>(
   type: K | string,
   elementProps: any,
   ...childElements: any[]
@@ -183,9 +202,9 @@ export  function createElement<K extends keyof HTMLElementTagNameMap>(
   };
 }
 
-export  const Fragment = (props: IJsxProps) => props.children;
+export const Fragment = (props: IJsxProps) => props.children;
 
-export const createDom = grow
+export const createDom = grow;
 
 const jsx = {
   createElement,

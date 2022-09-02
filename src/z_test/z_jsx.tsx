@@ -5,7 +5,7 @@
  * @Description:
  */
 
-import { jsx, style, IJsxProps, FC } from "../main";
+import { jsx, style, dom, IJsxProps, FC } from "../main";
 
 const test = () => {
   interface IJsxButtonProps extends IJsxProps {
@@ -38,14 +38,22 @@ const test = () => {
     );
   };
   const r = jsx.createDom(
-    <div>
+    <div
+      theDay="theDay"
+      className="aaa"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        border: "1px solid #000",
+        height: "100px",
+        width: "200px",
+      }}
+    >
       <Button
+        onClick={() => alert("aaaa")}
         className="hi-class"
-        style={style.css`position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate3d(-50%, -50%, 0);
-
+        style={style.css`
     outline: none;
     border: none;
     color: #fff;
@@ -53,9 +61,7 @@ const test = () => {
     padding: 8px;
     border-radius: 3px;
     white-space: nowrap;
-   :hover {
-      background-color: rgba(0, 183, 195, 0.8);
-    }
+
     cursor: pointer;
     transition: background-color 0.3s ease-out;`}
       >
@@ -63,7 +69,8 @@ const test = () => {
       </Button>
     </div>,
   );
-  document.querySelector("#root")!.appendChild(r!);
+
+  dom.append(document.querySelector("#root"), r);
 };
 
 const jsxTest = { test };
