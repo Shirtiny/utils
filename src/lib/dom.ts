@@ -1,6 +1,6 @@
-import lang from "./lang";
 import { grow, RenderTarget, JSX } from "./jsx";
-import { style } from ".";
+import lang from "./lang";
+import style from "./style";
 
 export function parseHtml(htmlString: string): DocumentFragment {
   return document.createRange().createContextualFragment(htmlString);
