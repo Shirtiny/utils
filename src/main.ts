@@ -9,6 +9,7 @@ export { default as dev } from "./lib/dev";
 export { default as file } from "./lib/file";
 export { default as media } from "./lib/media";
 export { default as http } from "./lib/http";
+export { default as api } from "./lib/api";
 export { default as lang } from "./lib/lang";
 export { default as math } from "./lib/math";
 export { default as base64 } from "./lib/base64";
