@@ -48,13 +48,15 @@ interface IEventMap {
 }
 
 class ObservableTask extends Events<IEventMap> implements ITask {
-  public readonly name: string;
+  private _name: string;
+  private _processing: boolean;
   private _source: Observable<any>;
   private _subscription?: Subscription;
 
   constructor(name: string, source: Observable<any>) {
     super();
-    this.name = name;
+    this._name = name;
+    this._processing = false;
     this._source = source;
     const oldTask = TaskMap.get(name);
     if (oldTask) {
@@ -72,13 +74,26 @@ class ObservableTask extends Events<IEventMap> implements ITask {
   start(observer?: Partial<Observer<any>>): void {
     this.stop();
     this._subscription = this._source.subscribe(observer);
-    this.dispatch("started");
+    if (!this._processing) {
+      this._processing = true;
+      this.dispatch("started");
+    }
   }
 
   stop(): void {
     if (!this._subscription) return;
     this._subscription.unsubscribe();
-    this.dispatch("stopped");
+    if (this._processing) {
+      this._processing = false;
+      this.dispatch("stopped");
+    }
+  }
+
+  get name(): string {
+    return this._name;
+  }
+  get processing(): boolean {
+    return this._processing;
   }
 }
 
