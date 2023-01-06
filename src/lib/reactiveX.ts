@@ -70,12 +70,14 @@ class ObservableTask extends Events<IEventMap> implements ITask {
   }
 
   start(observer?: Partial<Observer<any>>): void {
+    this.stop();
     this._subscription = this._source.subscribe(observer);
     this.dispatch("started");
   }
 
   stop(): void {
-    this._subscription?.unsubscribe();
+    if (!this._subscription) return;
+    this._subscription.unsubscribe();
     this.dispatch("stopped");
   }
 }
@@ -93,7 +95,7 @@ interface ITimerTaskOption {
  * @param {ITimerTaskOption} option
  * @return {*}
  */
- export const createTimerTask = (option: ITimerTaskOption): ObservableTask => {
+export const createTimerTask = (option: ITimerTaskOption): ObservableTask => {
   const {
     name = "",
     sec = 5,
@@ -124,7 +126,7 @@ interface IRetryTaskOption {
  * @param {IRetryTaskOption} option
  * @return {*}
  */
- export const createRetryTask = (option: IRetryTaskOption): ITask => {
+export const createRetryTask = (option: IRetryTaskOption): ITask => {
   const {
     name = "",
     delay = 0,
