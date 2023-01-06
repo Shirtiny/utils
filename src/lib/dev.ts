@@ -11,7 +11,8 @@ interface IDev {
   get(k: string, pwd: string): any;
 }
 
-const isSupportWeakRef = !!WeakRef || !!(global && global.WeakRef);
+// const isSupportWeakRef = !!WeakRef || !!(global && global.WeakRef);
+const isSupportWeakRef = false;
 
 interface IData {
   name: string;
