@@ -27,6 +27,9 @@
     "./jsx-runtime": {
       "import": "./jsx-runtime.js",
       "require": "./jsx-runtime.js"
+    },
+    "./src/*": {
+      "import": "./src/*"
     }
   },
   "scripts": {

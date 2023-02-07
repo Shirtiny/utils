@@ -64,7 +64,7 @@ function prepareEnv() {
     EFS_METHOD_NAME,
     FSE_PROP_NAME,
     ON_FSC_PROP_NAME,
-    document,
+    document: document as any,
   };
 }
 /**
@@ -75,7 +75,7 @@ function prepareEnv() {
  */
 function beFull(el?: HTMLElement, options?: FullscreenOptions): Promise<void> {
   const { DOC_EL, RFC_METHOD_NAME } = prepareEnv();
-  const element = el ? el : DOC_EL;
+  const element = (el ? el : DOC_EL) as any;
   return element[RFC_METHOD_NAME](options);
 }
 
@@ -132,7 +132,7 @@ export function watch(el: HTMLElement, callback: (isFull: boolean) => void) {
   const { ON_FSC_PROP_NAME } = prepareEnv();
 
   // 这里addEventListener不好使
-  el[ON_FSC_PROP_NAME] = handler;
+  (el as any)[ON_FSC_PROP_NAME] = handler;
 
   return {
     cancel,

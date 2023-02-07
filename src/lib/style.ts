@@ -80,7 +80,7 @@ const prefixes = ["Webkit", "ms", "Moz", "O"];
 // infinite loop, because it iterates over the newly added props too.
 Object.keys(isUnitlessNumber).forEach(function (prop) {
   prefixes.forEach(function (prefix) {
-    isUnitlessNumber[prefixKey(prefix, prop)] = isUnitlessNumber[prop];
+    (isUnitlessNumber as any)[prefixKey(prefix, prop)] = (isUnitlessNumber as any)[prop];
   });
 });
 
@@ -139,7 +139,7 @@ export const clsPainPattern = (
 
   const keys = Object.keys(object);
   const clsParams = keys.map((k) => {
-    const v = object[k];
+    const v = (object as any)[k];
 
     let key = usedPattern.split(kP).join(k).split(vP).join(v);
     if (lang.isBoolean(v)) {
@@ -188,7 +188,7 @@ export const parseStyleValue = (
     !isCustomProperty &&
     typeof styleValue === "number" &&
     styleValue !== 0 &&
-    !(isUnitlessNumber.hasOwnProperty(styleName) && isUnitlessNumber[styleName])
+    !(isUnitlessNumber.hasOwnProperty(styleName) && (isUnitlessNumber as any)[styleName])
   ) {
     return styleValue + "px"; // Presumes implicit 'px' suffix for unitless numbers
   }
@@ -213,7 +213,7 @@ export const toCSSStyle = (
 
     const styleValue = parseStyleValue(
       styleName,
-      styles[styleName],
+      (styles as any)[styleName],
       isCustomProperty,
     );
 
@@ -224,7 +224,7 @@ export const toCSSStyle = (
     if (isCustomProperty) {
       onCustomProperty && onCustomProperty(styleName, styleValue);
     } else {
-      CSSStyle[styleName] = styleValue;
+      (CSSStyle as any)[styleName] = styleValue;
     }
   }
   return CSSStyle;

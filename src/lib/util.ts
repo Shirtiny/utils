@@ -60,7 +60,7 @@ export const memo = (
             return method(createKeyFn(...args));
           },
         };
-        const interceptor = interceptors[p];
+        const interceptor = (interceptors as any)[p];
         return interceptor || method;
       }
 
@@ -80,7 +80,7 @@ export const pipePromises = (...fns: Array<(v: any) => any>) => {
 };
 
 // 深冻结函数。
-export const deepFreeze = (obj: object) => {
+export const deepFreeze = (obj: any) => {
   // 取回定义在 obj 上的属性名
   var propNames = Object.getOwnPropertyNames(obj);
 

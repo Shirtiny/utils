@@ -220,7 +220,7 @@ const formatTimeByDistance = (
     addSuffix,
     locale: {
       formatDistance: (type: string, upTo: number) => {
-        const formatter: DistanceFormatter = patternsFactory[type];
+        const formatter: DistanceFormatter = (patternsFactory as any)[type] as DistanceFormatter;
         if (!formatter) return "";
         return formatter(date1, date2, upTo, formatTime);
       },
@@ -273,9 +273,9 @@ const formatToDurationString = (
   const results = {};
 
   const remainingMilliseconds = types.reduce((remaining, type, index) => {
-    const unit = MILLISECONDS_IN[type];
+    const unit = (MILLISECONDS_IN as any)[type];
     const r = Math.floor(remaining / unit);
-    results[type] = !zeroPrefix && index === 0 ? r : String(r).padStart(2, "0");
+    (results as any)[type] = !zeroPrefix && index === 0 ? r : String(r).padStart(2, "0");
     return remaining - r * unit;
   }, milliseconds);
 
@@ -305,7 +305,7 @@ const parseDurationString = (durationString: string = ""): number => {
     if (!type || !timeStr) break;
     const num = parseInt(timeStr);
     if (isNaN(num)) continue;
-    totalMilliseconds += num * MILLISECONDS_IN[type];
+    totalMilliseconds += num * (MILLISECONDS_IN as any)[type];
   }
 
   const milliseconds = parseInt(millisecondsStr);

@@ -19,7 +19,7 @@ export const ab2str = (
 ): string => {
   const arr = new Uint8Array(buffer);
   return noEncode
-    ? String.fromCharCode(...arr)
+    ? String.fromCharCode(...Array.from(arr))
     : new TextDecoder().decode(arr.buffer);
 };
 
