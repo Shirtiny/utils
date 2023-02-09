@@ -99,7 +99,11 @@ export const get = async (
   return data;
 };
 
-const post = async (url: string, param?: object, option?: HttpOption) => {
+export const post = async (
+  url: string,
+  param?: object,
+  option?: HttpOption,
+) => {
   const data = await request(url, {
     method: HTTP_METHODS.POST,
     headers: {
