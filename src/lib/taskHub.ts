@@ -143,8 +143,8 @@ export class TaskHub extends Events<ITaskHubEventMap> {
 
     // 代理task的状态变更
     return new Proxy(task, {
-      set(target, name, newValue, _receiver) {
-        target[name] = newValue;
+      set(target: Task, name: string, newValue: any, _receiver: any) {
+        (target as any)[name] = newValue;
         if (name === "status") {
           hub.handleTaskStatusChange(target, newValue);
         }
