@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-09-30 18:00:56
  * @Description:
  */
-import date from "./date";
+import { unix, checkIsExpired } from "./date";
 
 interface IStorageData {
   value: any;
@@ -17,7 +17,7 @@ interface IStorageData {
  * @param {any} value 值
  * @param {number} expire 到期时间戳
  */
-export const set = (key: string, value: any, expire: number) => {
+export const set = (key: string, value: any, expire?: number) => {
   const data: IStorageData = {
     value,
     expire,
@@ -38,7 +38,7 @@ export const setTimeout = (
   value: object | string,
   timeoutSeconds: number,
 ) => {
-  const nowUnixSecond = date.unix();
+  const nowUnixSecond = unix();
   const expire = nowUnixSecond + timeoutSeconds;
   return set(key, value, expire);
 };
@@ -58,7 +58,7 @@ export const get = (key: string, origin?: boolean): any => {
     // 数据的expire为空或者为0 则表示永久有效 直接返回
     if (!data.expire) return data.value;
     // 判断数据是否过期
-    const isExpired = date.isExpired(data.expire);
+    const isExpired = checkIsExpired(data.expire);
     // 小于现在 表示已经过期 返回null
     if (isExpired) {
       return null;

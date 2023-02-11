@@ -75,21 +75,21 @@ const MILLISECONDS_IN = {
  * @description: 获取unix时间戳
  * @return {Number}
  */
-const unix = (date?: Date): number => {
+export const unix = (date?: Date): number => {
   if (lang.isUndefined(date)) return Math.floor(Date.now() / 1000);
   return getUnixTime(date);
 };
 
-const isExpired = (unixTime: number) => {
+export const checkIsExpired = (unixTime: number) => {
   // 传入的时间 小于现在的时间
   return unixTime - unix() < 0;
 };
 
-const fromUnixTime = (unixTime: number) => {
+export const fromUnixTime = (unixTime: number) => {
   return new Date(unixTime * 1000);
 };
 
-const timeToDate = (time: Time): Date => {
+export const timeToDate = (time: Time): Date => {
   if (isDate(time)) {
     return time as Date;
   }
@@ -100,7 +100,7 @@ const timeToDate = (time: Time): Date => {
   return new Date(NaN);
 };
 
-const formatTime = (time: Time, pattern = "yyyy-MM-dd HH:mm:ss xx") => {
+export const formatTime = (time: Time, pattern = "yyyy-MM-dd HH:mm:ss xx") => {
   const date = timeToDate(time);
   return format(date, pattern);
 };
@@ -115,7 +115,7 @@ const intervalTypes = {
 };
 
 // 获取一个date数组 传入起始date 和 时长（时长内的值可为负值）
-const getIntervalDates = (
+export const getIntervalDates = (
   start: Time,
   duration: Duration,
   type: keyof typeof intervalTypes,
@@ -148,7 +148,7 @@ const sameTypes = {
  * @param {String} type 判断类型，天、年等
  * @return {Boolean}
  */
-const isSame = (
+export const isSame = (
   time1: Time,
   time2: Time,
   type: keyof typeof sameTypes,
@@ -198,7 +198,7 @@ const defaultDistanceFormattersFactory: DistanceFormattersFactory = {
   almostXYears: (d) => formatTime(d, "yyyy-MM-dd HH:mm:ss"),
 };
 
-const formatTimeByDistance = (
+export const formatTimeByDistance = (
   time1: Time,
   time2: Time,
   options: {
@@ -228,7 +228,7 @@ const formatTimeByDistance = (
   });
 };
 
-const formatTimeByDistanceToNow = (
+export const formatTimeByDistanceToNow = (
   time: Time,
   options?: {
     distanceFormattersFactory?: Partial<DistanceFormattersFactory>;
@@ -253,7 +253,7 @@ interface IFormatToDurationStringOption {
  * @param {IFormatToDurationStringOption} option -eg: {zeroPrefix : true, needMilliseconds : true}
  * @returns durationString  -eg: input 321039.5 (ms)  output 00:05:21.039
  */
-const formatToDurationString = (
+export const formatToDurationString = (
   milliseconds: number = 0,
   upTo: keyof typeof MILLISECONDS_IN = "HOURS",
   option?: IFormatToDurationStringOption,
@@ -291,7 +291,7 @@ const formatToDurationString = (
  * @param {string} durationString -eg: 00:05:21.039
  * @return {number} milliseconds
  */
-const parseDurationString = (durationString: string = ""): number => {
+export const parseDurationString = (durationString: string = ""): number => {
   const str = String(durationString);
   const [mainStr, millisecondsStr] = str.split(".");
 
@@ -316,7 +316,7 @@ const parseDurationString = (durationString: string = ""): number => {
 };
 
 // date-fns
-const fns = {
+export const fns = {
   format,
   getUnixTime,
   formatDistance,
@@ -370,7 +370,7 @@ const date = {
   formatToDurationString,
   parseDurationString,
   getIntervalDates,
-  isExpired,
+  checkIsExpired,
   isSame,
   MILLISECONDS_IN,
   fns,

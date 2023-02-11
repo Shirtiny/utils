@@ -68,16 +68,20 @@ export class Notifier<K, P = any> implements INotifier<K, P> {
 }
 
 export interface IEvent {
-  readonly name: string;
-  readonly target: any;
+  readonly name?: string;
+  readonly target?: any;
 }
 
+// event名称于 event listener参数类型的映射
 export interface IEventMap {}
 
 export class Events<M extends IEventMap> {
   protected _notifier: INotifier<any, any>;
   constructor() {
     this._notifier = new Notifier();
+    Object.defineProperty(this, "_notifier", {
+      enumerable: false,
+    });
   }
 
   addEventListener<K extends keyof M>(
@@ -95,6 +99,6 @@ export class Events<M extends IEventMap> {
   }
 
   protected dispatch<K extends keyof M>(name: K, event?: M[K]) {
-    this._notifier.publish(name, event);
+    this._notifier.publish(name, { name, target: this, ...event });
   }
 }

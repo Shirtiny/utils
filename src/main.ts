@@ -23,3 +23,4 @@ export { default as util } from "./lib/util";
 export * from "./lib/customError";
 export * from "./lib/events";
 export * from "./lib/jsx";
+export * from "./lib/taskHub";
