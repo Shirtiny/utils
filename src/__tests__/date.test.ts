@@ -10,8 +10,8 @@ import date from "../lib/date";
 const unixTime = 1632996383;
 
 describe("date", () => {
-  it("isExpired", () => {
-    expect(date.isExpired(unixTime)).toBe(true);
+  it("checkIsExpired", () => {
+    expect(date.checkIsExpired(unixTime)).toBe(true);
   });
   it("formatTime", () => {
     expect(date.formatTime(unixTime)).toMatch(
