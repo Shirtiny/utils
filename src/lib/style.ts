@@ -80,7 +80,9 @@ const prefixes = ["Webkit", "ms", "Moz", "O"];
 // infinite loop, because it iterates over the newly added props too.
 Object.keys(isUnitlessNumber).forEach(function (prop) {
   prefixes.forEach(function (prefix) {
-    (isUnitlessNumber as any)[prefixKey(prefix, prop)] = (isUnitlessNumber as any)[prop];
+    (isUnitlessNumber as any)[prefixKey(prefix, prop)] = (
+      isUnitlessNumber as any
+    )[prop];
   });
 });
 
@@ -135,7 +137,7 @@ export const clsPainPattern = (
   const vP = "{v}";
   const defaultPattern = `${kP}-${vP}`;
   const isUseDefaultPattern = !pattern;
-  const usedPattern = isUseDefaultPattern ? defaultPattern : pattern;
+  const usedPattern = isUseDefaultPattern ? defaultPattern : pattern || "";
 
   const keys = Object.keys(object);
   const clsParams = keys.map((k) => {
@@ -188,7 +190,10 @@ export const parseStyleValue = (
     !isCustomProperty &&
     typeof styleValue === "number" &&
     styleValue !== 0 &&
-    !(isUnitlessNumber.hasOwnProperty(styleName) && (isUnitlessNumber as any)[styleName])
+    !(
+      isUnitlessNumber.hasOwnProperty(styleName) &&
+      (isUnitlessNumber as any)[styleName]
+    )
   ) {
     return styleValue + "px"; // Presumes implicit 'px' suffix for unitless numbers
   }
@@ -235,7 +240,7 @@ const style = {
   clsPainPattern,
   css,
   line,
-  toCSSStyle
+  toCSSStyle,
 };
 
 export default style;
