@@ -73,7 +73,7 @@ export const isString = (arg?: any): arg is string => typeof arg === "string";
  */
 export const isText = (arg?: any): arg is number | string =>
   isNumber(arg) || isString(arg);
-
+  
 const lang = {
   isFn,
   isBoolean,
@@ -83,7 +83,7 @@ const lang = {
   isNumber,
   isString,
   isNullOrUndefined,
-  isText,
+  isText
 };
 
 export default lang;

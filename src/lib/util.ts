@@ -96,6 +96,17 @@ export const deepFreeze = (obj: any) => {
   return Object.freeze(obj);
 };
 
+// 转驼峰
+export const camelCase = (str: string) => {
+  return String(str)
+    .split(" ")
+    .map((e, i) =>
+      i ? e.charAt(0).toUpperCase() + e.slice(1).toLowerCase() : e.toLowerCase()
+    )
+    .join("");
+}// "text That I WaNt to make cAMEL case" => "textThatIWantToMakeCamelCase"
+
+
 const util = {
   sleep,
   sleepSync,
@@ -104,6 +115,7 @@ const util = {
   pipe,
   pipePromises,
   deepFreeze,
+  camelCase
 };
 
 export default util;
