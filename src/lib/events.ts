@@ -156,6 +156,10 @@ export class DomEventStore {
     el.removeEventListener(eventType, ls);
   }
 
+  getStore() {
+    return this._store;
+  }
+
   // 观察dom属性变化
   observeMutation(
     key: string,
@@ -218,7 +222,7 @@ export class DomEventStore {
     this._observersMap.clear();
   }
 
-  getStore() {
-    return this._store;
+  getObserverStore() {
+    return this._observersMap;
   }
 }
