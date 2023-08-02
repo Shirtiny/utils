@@ -103,7 +103,6 @@ export class Events<M extends IEventMap> {
   }
 }
 
-
 interface Observer {
   observe(target: Element, ...arg: any[]): any;
   disconnect(): void;
@@ -111,7 +110,7 @@ interface Observer {
 
 export class DomEventStore {
   private _store = new WeakMap<EventTarget, Map<string, EventListener[]>>();
-  private _observers: Observer[] = [];
+  private _observersMap: Map<string, Observer> = new Map();
 
   // 添加dom监听
   add(el: EventTarget, eventType: string, listener: EventListener) {
@@ -159,6 +158,7 @@ export class DomEventStore {
 
   // 观察dom属性变化
   observeMutation(
+    key: string,
     el: Node,
     callback: MutationCallback,
     attributes: string[] | MutationObserverInit,
@@ -174,12 +174,13 @@ export class DomEventStore {
           }
         : attributes,
     );
-    this._observers.push(observer);
+    this.addObserver(key, observer);
     return observer;
   }
 
   // 观察dom尺寸变化
   observeResize(
+    key: string,
     el: Element,
     callback: ResizeObserverCallback,
     box: ResizeObserverBoxOptions = "border-box",
@@ -188,17 +189,33 @@ export class DomEventStore {
     observer.observe(el, {
       box,
     });
-    this._observers.push(observer);
+    this.addObserver(key, observer);
     return observer;
   }
 
+  protected addObserver(
+    key: string,
+    observer: ResizeObserver | MutationObserver,
+  ) {
+    const obExist = this._observersMap.get(key);
+    if (obExist) obExist.disconnect();
+    this._observersMap.set(key, observer);
+  }
+
+  removeObserver(key: string) {
+    const obExist = this._observersMap.get(key);
+    if (!obExist) return;
+    obExist.disconnect();
+    this._observersMap.delete(key);
+  }
+
   clearObservers() {
-    this._observers.forEach((observer) => {
+    this._observersMap.forEach((observer) => {
       if (observer) {
         observer.disconnect();
       }
     });
-    this._observers = [];
+    this._observersMap.clear();
   }
 
   getStore() {
