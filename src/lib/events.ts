@@ -102,3 +102,106 @@ export class Events<M extends IEventMap> {
     this._notifier.publish(name, { name, target: this, ...event });
   }
 }
+
+
+interface Observer {
+  observe(target: Element, ...arg: any[]): any;
+  disconnect(): void;
+}
+
+export class DomEventStore {
+  private _store = new WeakMap<EventTarget, Map<string, EventListener[]>>();
+  private _observers: Observer[] = [];
+
+  // 添加dom监听
+  add(el: EventTarget, eventType: string, listener: EventListener) {
+    const map = this._store.get(el);
+    if (!map) {
+      this._store.set(el, new Map([[eventType, [listener]]]));
+    } else {
+      const arr = map.get(eventType) || [];
+      arr.push(listener);
+      map.set(eventType, arr);
+    }
+    el.addEventListener(eventType, listener);
+  }
+
+  // 移除监听器 eventType不传则移除全部 不指定listener则移除eventType下的全部监听器
+  remove(el: EventTarget, eventType?: string, listener?: EventListener) {
+    const map = this._store.get(el);
+    if (!map) return;
+    if (!eventType) {
+      // 移除el全部监听器
+      map.forEach((arr, key) => {
+        arr.forEach((ls) => {
+          el.removeEventListener(key, ls);
+        });
+      });
+      map.clear();
+      this._store.delete(el);
+      return;
+    }
+    if (!listener) {
+      // 只移除el eventType下的监听器
+      const arr = map.get(eventType) || [];
+      arr.forEach((ls) => {
+        el.removeEventListener(eventType, ls);
+      });
+      map.delete(eventType);
+      return;
+    }
+    const ls = (map.get(eventType) || []).find((l) => l === listener);
+    if (!ls) {
+      return;
+    }
+    el.removeEventListener(eventType, ls);
+  }
+
+  // 观察dom属性变化
+  observeMutation(
+    el: Node,
+    callback: MutationCallback,
+    attributes: string[] | MutationObserverInit,
+  ): MutationObserver {
+    const observer = new MutationObserver(callback);
+    observer.observe(
+      el,
+      attributes instanceof Array
+        ? {
+            attributes: true,
+            attributeFilter: attributes,
+            attributeOldValue: true,
+          }
+        : attributes,
+    );
+    this._observers.push(observer);
+    return observer;
+  }
+
+  // 观察dom尺寸变化
+  observeResize(
+    el: Element,
+    callback: ResizeObserverCallback,
+    box: ResizeObserverBoxOptions = "border-box",
+  ): ResizeObserver {
+    const observer = new ResizeObserver(callback);
+    observer.observe(el, {
+      box,
+    });
+    this._observers.push(observer);
+    return observer;
+  }
+
+  clearObservers() {
+    this._observers.forEach((observer) => {
+      if (observer) {
+        observer.disconnect();
+      }
+    });
+    this._observers = [];
+  }
+
+  getStore() {
+    return this._store;
+  }
+}
