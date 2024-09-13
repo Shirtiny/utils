@@ -185,14 +185,18 @@ export class DomEventStore {
   // 观察dom尺寸变化
   observeResize(
     key: string,
-    el: Element,
+    els: Element | Element[],
     callback: ResizeObserverCallback,
     box: ResizeObserverBoxOptions = "border-box",
   ): ResizeObserver {
     const observer = new ResizeObserver(callback);
-    observer.observe(el, {
-      box,
-    });
+    const arr = Array.isArray(els) ? els : [els];
+    arr.forEach(el => {
+      observer.observe(el, {
+        box,
+      });
+    })
+
     this.addObserver(key, observer);
     return observer;
   }
