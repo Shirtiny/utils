@@ -73,7 +73,7 @@ export interface IEvent {
 }
 
 // event名称于 event listener参数类型的映射
-export interface IEventMap {}
+export interface IEventMap { }
 
 export class Events<M extends IEventMap> {
   protected _notifier: INotifier<any, any>;
@@ -172,10 +172,10 @@ export class DomEventStore {
       el,
       attributes instanceof Array
         ? {
-            attributes: true,
-            attributeFilter: attributes,
-            attributeOldValue: true,
-          }
+          attributes: true,
+          attributeFilter: attributes,
+          attributeOldValue: true,
+        }
         : attributes,
     );
     this.addObserver(key, observer);
@@ -230,3 +230,17 @@ export class DomEventStore {
     return this._observersMap;
   }
 }
+
+// 阻止滚动穿透 通过禁用指定节点的触控、滚轮事件来实现
+export const preventScrollingThrough = (node: HTMLElement, options: { pc: boolean, wap: boolean }) => {
+  const { pc = true, wap = true } = options || {};
+  if (!node) return;
+  const prevent = (e: Event) => {
+    if (node.clientHeight >= node.scrollHeight) {
+      e.preventDefault();
+    }
+  };
+  wap && (node.ontouchmove = prevent);
+  pc && (node.onwheel = prevent);
+  node.style.cssText = 'overscroll-behavior: contain;';
+};
