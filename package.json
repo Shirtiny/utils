@@ -1,6 +1,6 @@
 {
   "name": "@shirtiny/utils",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "utils desc",
   "types": "./dist/types/main.d.ts",
   "main": "./dist/main.es.js",
