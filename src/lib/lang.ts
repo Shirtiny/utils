@@ -5,75 +5,62 @@
  * @Description:
  */
 
-/**
- * @description: 判断是否为函数
- * @param {any} arg
- * @return {Boolean} -eg: arg is Function
- */
+const toString = Object.prototype.toString
+
+export function getTag(value: any) {
+  if (value == null) {
+    return value === undefined ? '[object Undefined]' : '[object Null]'
+  }
+  return toString.call(value)
+}
+
+
 export const isFn = (arg?: any): arg is Function => typeof arg === "function";
 
-/**
- * @description: 判断是否为对象
- * @param {any} arg
- * @return {Boolean} -eg: arg is Object
- */
-export const isObject = (arg?: any): arg is Object => arg instanceof Object;
 
-/**
- * @description: 判断是否为数组
- * @param {any} arg
- * @return {Boolean} -eg: arg is Array
- */
+export const isObject = (arg?: any): arg is object => {
+  const type = typeof arg
+  return arg != null && (type === 'object' || type === 'function')
+};
+
+export const isObjectLike = (arg?: any): boolean => {
+  return typeof arg === 'object' && arg !== null
+}
+
 export const isArray = Array.isArray;
 
-/**
- * @description: 判断是否为布尔
- * @param {any} arg
- * @return {Boolean} -eg: arg is Boolean
- */
-export const isBoolean = (arg?: any): arg is boolean =>
-  typeof arg === "boolean";
+export const isBoolean = (arg?: any): arg is boolean => {
+  return arg === true || arg === false || (isObjectLike(arg) && getTag(arg) == '[object Boolean]');
+}
 
-/**
- * @description: 判断是否为未定义
- * @param {any} arg
- * @return {Boolean} -eg: arg is Object
- */
-export const isUndefined = (arg?: any): arg is undefined =>
-  typeof arg === "undefined";
+export const isUndefined = (arg?: any): arg is undefined => arg === undefined
 
-/**
- * @description: 判断是否为null或者未定义
- * @param {any} arg
- * @return {Boolean} -eg: arg is null | undefined
- */
+
 export const isNullOrUndefined = (arg?: any): arg is null | undefined => {
   if (arg) return false;
   return !!(arg ?? true);
 };
 
 /**
- * @description:判断是否为数字
- * @param {any} arg
- * @return {Boolean} -eg: arg is number
- */
-export const isNumber = (arg?: any): arg is number => typeof arg === "number";
+ * @description 与isNullOrUndefined相同
+ * */
+export const isNil = (arg: any): arg is null | undefined => arg == null
 
-/**
- * @description:判断是否为字符串
- * @param {any} arg
- * @return {Boolean} -eg: arg is string
- */
-export const isString = (arg?: any): arg is string => typeof arg === "string";
+export const isNumber = (arg?: any): arg is number => {
+  return typeof arg === 'number' ||
+    (isObjectLike(arg) && getTag(arg) == '[object Number]')
+};
 
-/**
- * @description:判断是否为text节点的值
- * @param {any} arg
- * @return {Boolean} -eg: arg is number | string
- */
+
+export const isString = (arg?: any): arg is string => {
+  const type = typeof arg
+  return type === 'string' || (type === 'object' && arg != null && !Array.isArray(arg) && getTag(arg) == '[object String]')
+};
+
+
 export const isText = (arg?: any): arg is number | string =>
   isNumber(arg) || isString(arg);
-  
+
 const lang = {
   isFn,
   isBoolean,
