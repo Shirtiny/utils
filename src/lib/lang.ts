@@ -5,7 +5,7 @@
  * @Description:
  */
 
-const toString = Object.prototype.toString
+const toString = Object.prototype.toString;
 
 export function getTag(value: any) {
   if (value == null) {
@@ -57,9 +57,13 @@ export const isString = (arg?: any): arg is string => {
   return type === 'string' || (type === 'object' && arg != null && !Array.isArray(arg) && getTag(arg) == '[object String]')
 };
 
-
 export const isText = (arg?: any): arg is number | string =>
   isNumber(arg) || isString(arg);
+
+export const isSymbol = (arg: any): arg is symbol => {
+  const type = typeof arg
+  return type == 'symbol' || (type === 'object' && arg != null && getTag(arg) == '[object Symbol]')
+}
 
 const lang = {
   getTag,
@@ -73,7 +77,8 @@ const lang = {
   isString,
   isNullOrUndefined,
   isNil,
-  isText
+  isText,
+  isSymbol
 };
 
 export default lang;
