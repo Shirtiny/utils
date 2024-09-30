@@ -62,14 +62,17 @@ export const isText = (arg?: any): arg is number | string =>
   isNumber(arg) || isString(arg);
 
 const lang = {
+  getTag,
   isFn,
   isBoolean,
   isObject,
+  isObjectLike,
   isArray,
   isUndefined,
   isNumber,
   isString,
   isNullOrUndefined,
+  isNil,
   isText
 };
 
