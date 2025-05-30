@@ -1,6 +1,6 @@
 {
   "name": "@shirtiny/utils",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "utils desc",
   "types": "./dist/types/main.d.ts",
   "main": "./dist/main.es.js",
@@ -15,6 +15,7 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/main.d.ts",
       "import": "./dist/main.es.js"
     },
     "./lib": {
