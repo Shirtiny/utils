@@ -1,6 +1,7 @@
 import { grow, RenderTarget, JSX } from "./jsx";
 import lang from "./lang";
 import style from "./style";
+import util from "./util";
 
 export function parseHtml(htmlString: string): DocumentFragment {
   return document.createRange().createContextualFragment(htmlString);
@@ -13,7 +14,7 @@ export function create<K extends keyof HTMLElementTagNameMap>(
 ): HTMLElementTagNameMap[K] {
   const element = document.createElement(tag, { is });
 
-  return Object.assign(element, properties);
+  return Object.assign(element, util.clean(properties));
 }
 
 export function createFragment() {

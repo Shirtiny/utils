@@ -96,16 +96,32 @@ export const deepFreeze = (obj: any) => {
   return Object.freeze(obj);
 };
 
+/**
+ * 从对象中去除值为 undefined 或 null 的字段，返回一个新对象。
+ * 该方案兼容性良好，适用于不支持 ES2017 Object.fromEntries 的环境。
+ */
+const clean = (obj: any) => {
+  return Object.keys(obj).reduce((acc, key) => {
+    const value = obj[key];
+    // 使用 != null 同时排除 undefined 和 null
+    if (value != null) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
+};
+
 // 转驼峰
 export const camelCase = (str: string) => {
   return String(str)
     .split(" ")
     .map((e, i) =>
-      i ? e.charAt(0).toUpperCase() + e.slice(1).toLowerCase() : e.toLowerCase()
+      i
+        ? e.charAt(0).toUpperCase() + e.slice(1).toLowerCase()
+        : e.toLowerCase(),
     )
     .join("");
-}// "text That I WaNt to make cAMEL case" => "textThatIWantToMakeCamelCase"
-
+}; // "text That I WaNt to make cAMEL case" => "textThatIWantToMakeCamelCase"
 
 const util = {
   sleep,
@@ -115,7 +131,8 @@ const util = {
   pipe,
   pipePromises,
   deepFreeze,
-  camelCase
+  camelCase,
+  clean,
 };
 
 export default util;
