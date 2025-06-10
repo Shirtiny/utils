@@ -83,7 +83,7 @@ export const pipePromises = (...fns: Array<(v: any) => any>) => {
 };
 
 // 异步队列 顺序执行 可中断
-export const queAsync = async (
+export const quePromises = async (
   fns: Array<(v: any) => any>,
   args: any,
   isAbort: (result: any) => boolean,
