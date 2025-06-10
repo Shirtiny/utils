@@ -74,9 +74,30 @@ export const pipe = (...fns: Function[]) => {
   return (input: any) => fns.reduce((r, fn) => fn(r), input);
 };
 
+// 异步管道
 export const pipePromises = (...fns: Array<(v: any) => any>) => {
   return (input: any) =>
-    fns.reduce((promise, fn) => promise.then(fn), Promise.resolve(input));
+    fns
+      .filter((fn) => lang.isFn(fn))
+      .reduce((promise, fn) => promise.then(fn), Promise.resolve(input));
+};
+
+// 异步队列 顺序执行 可中断
+export const queAsync = async (
+  fns: Array<(v: any) => any>,
+  args: any,
+  isAbort: (result: any) => boolean,
+) => {
+  if (!Array.isArray(fns)) return;
+  const validFns = fns.filter((fn) => lang.isFn(fn));
+  let result = null;
+  for (const fn of validFns) {
+    result = await fn(args);
+    if (isAbort?.(result)) {
+      return result;
+    }
+  }
+  return result;
 };
 
 // 深冻结函数。
